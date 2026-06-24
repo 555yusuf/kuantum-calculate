@@ -1,439 +1,579 @@
-# وثيقة المواصفات التقنية الشاملة للباك إند (Comprehensive API & Backend Specification Document)
+# Kapsamlı Backend Teknik Spesifikasyon Dokümanı (Comprehensive API & Backend Specification Document)
 
-تُقدم هذه الوثيقة دليلاً مرجعياً كاملاً وتفصيلياً لمطور واجهات المستخدم (Frontend Developer) للتعامل مع هذا المشروع وربطه بالواجهات دون الحاجة لتعديل سطر واحد في الباك إند. جميع سلوكيات النظام، الهياكل البيانية للمدخلات والمخرجات، الثوابت، والحالات الخاصة مشروحة هنا بالتفصيل الممل.
-
----
-
-## 1. نظرة عامة على النظام (System Overview)
-
-### فكرة المشروع الرئيسية
-المشروع عبارة عن **نظام محاكاة وتحليل مالي للاستثمارات في أسهم الشركات العالمية**. يتيح النظام للمستخدمين:
-1. تسجيل الحسابات وتسجيل الدخول الآمن.
-2. جلب الأسعار التاريخية اليومية للأسهم.
-3. حساب أداء الاستثمار دفعة واحدة (Lump Sum Investment) ومقارنة قيمة الشراء بقيمة البيع واستخراج صافي الربح/الخسارة ومعدل العائد الاستثماري (ROI).
-4. تحديد أفضل وأسوأ الأيام للاستثمار (توقيت السوق - Market Timing) عبر استخراج أعلى وأدنى سعر إغلاق سهم خلال فترة محددة.
-5. محاكاة استراتيجية الاستثمار الدوري بمبلغ ثابت شهرياً (Dollar Cost Averaging - DCA) واستعراض ملخص المحفظة والتفاصيل الشهرية المفصلة.
-
-### التقنيات المستخدمة في الباك إند
-- **البيئة الأساسية**: Node.js مع إطار عمل Express لبناء خادم الويب وخدمات الـ API بنمط معماري MVC مصغر.
-- **قاعدة البيانات**: MongoDB بالاعتماد على Mongoose لبناء النماذج والجداول.
-- **التحقق من البيانات**: Joi و Joi-Password-Complexity للتحقق من المدخلات بشكل صارم قبل إرسالها إلى الخدمات أو قاعدة البيانات.
-- **الاتصال الخارجي**: Axios لجلب بيانات الأسهم الحقيقية والتاريخية من مزود البيانات العالمي **Tiingo API**.
-- **التشفير والحماية**: bcryptjs لتشفير كلمات المرور داخل قاعدة البيانات.
-- **نظام المصادقة**: jsonwebtoken (JWT) لإصدار توكن التحقق للمستخدمين المسجلين.
+Bu doküman, Frontend Geliştiricisinin backend'de tek bir satır bile kod değiştirmesine gerek kalmadan bu projeyle çalışabilmesi ve arayüzleri bağlayabilmesi için eksiksiz ve detaylı bir başvuru rehberi sunmaktadır. Sistemin tüm davranışları, girdi ve çıktı veri yapıları, sabitler ve istisnai durumlar burada en ince ayrıntısına kadar açıklanmıştır.
 
 ---
 
-## 2. مخطط قواعد البيانات والنماذج (Data Models & Schemas)
+## 1. Sistem Genel Bakış (System Overview)
 
-يحتوي النظام على نموذج تخزين واحد في قاعدة البيانات (User Model)، بالإضافة إلى هيكل بيانات ثابت للتحقق من رموز الشركات المدعومة (Company Symbols).
+### Projenin Ana Fikri
 
-### أولاً: نموذج المستخدم (User Model)
-*تم تعريفه في الملف [User.model.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/models/User.model.js)*
+Bu proje, **küresel şirketlerin hisse senetleri üzerine bir finansal simülasyon ve analiz sistemidir**. Sistem kullanıcılara şu olanakları sağlar:
 
-يتم حفظ بيانات المستخدمين وفقاً للهيكل التالي:
+1. Hesap oluşturma ve güvenli giriş yapma.
+2. Hisse senetlerinin günlük geçmiş fiyatlarını getirme.
+3. Tek seferlik yatırım (Lump Sum Investment) performansını hesaplama; alış ve satış değerlerini karşılaştırarak net kâr/zararı ve Yatırım Getirisi (ROI) oranını çıkarma.
+4. Belirli bir zaman aralığındaki en yüksek ve en düşük kapanış fiyatlarını bularak yatırım için en iyi ve en kötü günleri belirleme (Piyasa Zamanlaması - Market Timing).
+5. Aylık sabit bir tutarla Düzenli Alım Stratejisi (Dolar Maliyet Ortalaması - DCA) simülasyonu yapma, portföy özetini ve aylık bazda detaylı dökümleri görüntüleme.
 
-| اسم الحقل (Field) | نوع البيانات (Type) | إجباري (Required) | القيمة الافتراضية (Default) | قيود التحقق وشروط الحقل (Validation Rules) |
-| :--- | :--- | :--- | :--- | :--- |
-| `_id` | `ObjectId` | نعم (تلقائي) | تلقائي | معرف فريد مميز للمستخدم يتم إنشاؤه بواسطة MongoDB. |
-| `email` | `String` | نعم | لا يوجد | بريد إلكتروني فريد (`unique`)، يتم إزالة المسافات الزائدة منه تلقائياً (`trim`). |
-| `username` | `String` | نعم | لا يوجد | اسم مستخدم فريد (`unique`)، إزالة المسافات الزائدة (`trim`)، الطول الأدنى: 1 حرف، الأقصى: 200 حرف. |
-| `password` | `String` | نعم | لا يوجد | كلمة مرور مشفرة بـ Bcrypt، الطول الأدنى: 8 أحرف. |
-| `age` | `String` | نعم | لا يوجد | عمر المستخدم (مخزن كـ نص String). |
-| `createdAt` | `Date` | نعم (تلقائي) | تاريخ الإنشاء | تاريخ إنشاء الحساب (مضاف تلقائياً بفضل `timestamps: true`). |
-| `updatedAt` | `Date` | نعم (تلقائي) | تاريخ التحديث | تاريخ آخر تحديث للبيانات (مضاف تلقائياً بفضل `timestamps: true`). |
+### Backend'de Kullanılan Teknolojiler
+
+* **Temel Ortam**: Web sunucusu ve API hizmetlerini mini bir MVC mimarisiyle inşa etmek için Node.js ve Express framework.
+* **Veritabanı**: Şemaları ve modelleri oluşturmak için Mongoose tabanlı MongoDB.
+* **Veri Doğrulama**: Verileri servislere veya veritabanına göndermeden önce katı bir şekilde denetlemek için Joi ve Joi-Password-Complexity.
+* **Dış Bağlantılar**: Global veri sağlayıcısı **Tiingo API** üzerinden gerçek ve geçmiş hisse senedi verilerini çekmek için Axios.
+* **Şifreleme ve Güvenlik**: Veritabanındaki parolaları hash'lemek için bcryptjs.
+* **Kimlik Doğrulama Sistemi**: Kayıtlı kullanıcılara doğrulama token'ı üretmek için jsonwebtoken (JWT).
 
 ---
 
-## 3. نظام المصادقة والصلاحيات (Authentication & Authorization)
+## 2. Veritabanı Şemaları ve Modelleri (Data Models & Schemas)
 
-### طريقة عمل المصادقة
-تتم عملية المصادقة في النظام عبر توكن الويب من نوع **JWT (JSON Web Token)**. عند تسجيل حساب جديد أو تسجيل الدخول بنجاح، يقوم السيرفر بتوليد توكن يحتوي على معرف المستخدم الفريد (`id`) وتوقيعه باستخدام المفتاح السري المسمى `JWT_SECRET_KEY` المخزن في ملف البيئة `.env`.
+Sistemde bir adet veritabanı depolama modeli (User Model) ve desteklenen şirket sembollerini (Company Symbols) doğrulamak için sabit bir veri yapısı bulunmaktadır.
 
-### أين يرسل الفرونت إند التوكن؟
+### Birincisi: Kullanıcı Modeli (User Model)
+
+*[User.model.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/models/User.model.js) dosyasında tanımlanmıştır.*
+
+Kullanıcı verileri aşağıdaki yapıya göre kaydedilir:
+
+| Alan Adı (Field) | Veri Tipi (Type) | Zorunlu mu? (Required) | Varsayılan Değer (Default) | Doğrulama Kuralları ve Alan Şartları (Validation Rules) |
+| --- | --- | --- | --- | --- |
+| `_id` | `ObjectId` | Evet (Otomatik) | Otomatik | MongoDB tarafından oluşturulan benzersiz kullanıcı kimliği. |
+| `email` | `String` | Evet | Yok | Benzersiz (`unique`) e-posta adresi; başındaki ve sonundaki boşluklar otomatik olarak silinir (`trim`). |
+| `username` | `String` | Evet | Yok | Benzersiz (`unique`) kullanıcı adı; boşluklar silinir (`trim`), Minimum uzunluk: 1 karakter, Maksimum: 200 karakter. |
+| `password` | `String` | Evet | Yok | Bcrypt ile hash'lenmiş parola, Minimum uzunluk: 8 karakter. |
+| `age` | `String` | Evet | Yok | Kullanıcının yaşı (metin/String olarak saklanır). |
+| `createdAt` | `Date` | Evet (Otomatik) | Oluşturulma Tarihi | Hesabın oluşturulduğu tarih (`timestamps: true` sayesinde otomatik eklenir). |
+| `updatedAt` | `Date` | Evet (Otomatik) | Güncellenme Tarihi | Verilerin son güncellendiği tarih (`timestamps: true` sayesinde otomatik eklenir). |
+
+---
+
+## 3. Kimlik Doğrulama ve Yetkilendirme (Authentication & Authorization)
+
+### Kimlik Doğrulama Nasıl Çalışır?
+
+Sistemdeki kimlik doğrulama işlemi **JWT (JSON Web Token)** üzerinden gerçekleştirilir. Yeni bir hesap oluşturulduğunda veya başarıyla giriş yapıldığında, sunucu kullanıcının benzersiz kimliğini (`id`) içeren ve `.env` dosyasında saklanan `JWT_SECRET_KEY` adlı gizli anahtarla imzalanmış bir token üretir.
+
+### Frontend Token'ı Nereye Göndermeli?
+
 > [!IMPORTANT]
-> يرجى الانتباه الشديد لطريقة إرسال التوكن في هذا المشروع. لا يتم إرسال التوكن بصيغة `Authorization: Bearer <token>` الشائعة، بل يتم إرساله **مباشرة في ترويسات الطلب (HTTP Headers)** تحت حقل مخصص يسمى **`token`**.
->
-> مثال على ترويسة الطلب:
+> Lütfen bu projede token'ın gönderim şekline çok dikkat edin. Token, yaygın olan `Authorization: Bearer <token>` formatında **GÖNDERİLMEZ**; doğrudan istek başlıklarında (**HTTP Headers**) özel olarak tanımlanmış **`token`** adlı bir alanın içine yerleştirilerek gönderilir.
+> İstek başlığı örneği (HTTP Header):
 > ```http
 > token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwZDBmZTRmNTMxMTIzNjE2OGExMDljYSIsImlhdCI6MTYyNDM2NDYwMH0...
+> 
 > ```
+> 
+> 
 
-### الأدوار والتحقق من الصلاحيات (Roles & Access Control)
-يحتوي النظام على ملف وسيط (Middleware) للتحقق من الصلاحيات وهو [verifyToken.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/middlewares/verifyToken.js) ويحتوي على الصلاحيات التالية:
+### Roller ve Erişim Kontrolü (Roles & Access Control)
 
-1. **التحقق من التوكن العام (`verifyToken`)**:
-   - يتحقق من وجود الهيدر `token` وصحته.
-   - في حال نجاح التحقق، يقوم بفك تشفير التوكن وإرفاق بيانات المستخدم بطلب الخدمة كـ `req.user` ثم ينتقل للخطوة التالية (`next()`).
-   - في حال الفشل أو عدم وجود الهيدر، يرجع استجابة خطأ `401 Unauthorized`.
+Sistemde yetkileri kontrol etmek için [verifyToken.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/middlewares/verifyToken.js) adında bir Middleware (ara katman) dosyası bulunur ve şu yetkilendirme kurallarını içerir:
 
-2. **التحقق من صاحب الحساب أو الأدمن (`verifyTokenAndAuthorization`)**:
-   - ينفذ `verifyToken` أولاً للتأكد من هوية المستخدم.
-   - يقارن المعرّف الموجود في التوكن (`req.user.id`) بالمعرّف الممرر في مسار الطلب (`req.params.id`). أو يتحقق مما إذا كان المستخدم مديراً (`req.user.isAdmin` تساوي `true`).
-   - إذا تحقق أحد الشرطين، يتم السماح بمرور الطلب. خلاف ذلك، يرجع خطأ `403 Forbidden` برسالة `"You are not allowed"`.
+1. **Genel Token Doğrulaması (`verifyToken`)**:
+* `token` header'ının varlığını ve geçerliliğini kontrol eder.
+* Doğrulama başarılı olursa token'ı çözümler, kullanıcı bilgilerini `req.user` olarak isteğe ekler ve bir sonraki adıma (`next()`) geçer.
+* Başarısız olursa veya header bulunmazsa `401 Unauthorized` hatası döndürür.
 
-3. **التحقق من الأدمن فقط (`verifyTokenAndAdmin`)**:
-   - ينفذ `verifyToken` أولاً.
-   - يتحقق مما إذا كان المستخدم مديراً (`req.user.isAdmin` تساوي `true`).
-   - إذا لم يكن مديراً، يرجع خطأ `403 Forbidden` برسالة `"You are not allowed ,only admin allowed"`.
+
+2. **Hesap Sahibi veya Admin Doğrulaması (`verifyTokenAndAuthorization`)**:
+* Önce kullanıcının kimliğini doğrulamak için `verifyToken`ı çalıştırır.
+* Token içindeki ID (`req.user.id`) ile istek URL'indeki ID'yi (`req.params.id`) karşılaştırır veya kullanıcının admin olup olmadığına (`req.user.isAdmin === true`) bakar.
+* İki şarttan biri sağlanırsa isteğin geçmesine izin verilir. Aksi takdirde `"You are not allowed"` mesajıyla `403 Forbidden` hatası döndürür.
+
+
+3. **Yalnızca Admin Doğrulaması (`verifyTokenAndAdmin`)**:
+* Önce `verifyToken`ı çalıştırır.
+* Kullanıcının admin olup olmadığını (`req.user.isAdmin === true`) kontrol eder.
+* Admin değilse, `"You are not allowed ,only admin allowed"` mesajıyla `403 Forbidden` hatası döndürür.
+
+
 
 > [!WARNING]
-> **ملاحظة تقنية حرجة**:
-> في النسخة الحالية من الكود، **لم يتم تفعيل هذه البرمجيات الوسيطة (Middlewares) على أي مسار من مسارات المشروع النشطة** (الملفات [users.routes.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/routes/users.routes.js) و [asset.routes.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/routes/asset.routes.js)). بالتالي، تعتبر جميع المسارات الحالية **عامة (Public)** حالياً، ولكن الكود جاهز لتفعيلها بمجرد إرفاق الميدل وير للمسار المعني.
->
-> كذلِك، **لا يوجد حقل `isAdmin` داخل الـ `UserSchema`** في قاعدة البيانات، مما يعني أنه في حال استخدام الميدل وير للتحقق من الأدمن، سيفشل الشرط بشكل افتراضي لعدم وجود القيمة في مستند المستخدم ما لم يتم حقنها يدوياً في قاعدة البيانات أو تعديل الموديل لاحقاً.
+> **Kritik Teknik Not**:
+> Kodun mevcut sürümünde, **bu Middleware'ler projenin aktif uç noktalarının (routes) hiçbirinde devreye alınmamıştır** ([users.routes.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/routes/users.routes.js) ve [asset.routes.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/routes/asset.routes.js) dosyaları). Dolayısıyla, şu anki tüm rotalar varsayılan olarak **herkese açıktır (Public)**, ancak middleware ilgili rotaya eklendiği an çalışacak şekilde kod altyapısı hazırdır.
+> Ayrıca, veritabanındaki **`UserSchema` içinde `isAdmin` adında bir alan bulunmamaktadır**. Bu durum, admin kontrolü yapan middleware kullanıldığında, veritabanına manuel olarak enjekte edilmediği veya model sonradan güncellenmediği sürece sorgunun varsayılan olarak başarısız olacağı anlamına gelir.
 
 ---
 
-## 4. جدول تفاصيل الـ Endpoints (The API Matrix)
+## 4. Uç Nokta (Endpoint) Detay Matrisi (The API Matrix)
 
-فيما يلي المواصفات التفصيلية الكاملة لجميع المسارات السبعة (7 Routes) المتوفرة في المشروع:
-
----
-
-### [1] جلب قائمة جميع المستخدمين
-* **المسار والطريقة**: `GET /api/users`
-* **الوظيفة**: جلب مصفوفة كاملة تحتوي على بيانات جميع المستخدمين المسجلين في النظام.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**: لا يوجد مدخلات في الـ body أو الـ params أو الـ query.
-* **شكل الاستجابة الناجحة (Success Response 202 Accepted)**:
-  * الرمز: `202`
-  * شكل الاستجابة (JSON):
-    ```json
-    [
-      {
-        "_id": "6676ba5cc97b4f5352c349e1",
-        "email": "user1@example.com",
-        "username": "financial_user",
-        "password": "$2a$10$xyzT... (ملاحظة: شفرة الباسورد يتم إرجاعها)",
-        "age": "30",
-        "createdAt": "2026-06-22T12:30:20.123Z",
-        "updatedAt": "2026-06-22T12:30:20.123Z",
-        "__v": 0
-      },
-      {
-        "_id": "6676ba5cc97b4f5352c349e2",
-        "email": "user2@example.com",
-        "username": "investor_pro",
-        "password": "$2a$10$abcD... (ملاحظة: شفرة الباسورد يتم إرجاعها)",
-        "age": "25",
-        "createdAt": "2026-06-22T12:31:00.456Z",
-        "updatedAt": "2026-06-22T12:31:00.456Z",
-        "__v": 0
-      }
-    ]
-    ```
-* **شكل استجابة الخطأ (Error Response 5xx/4xx)**:
-  يرجع خطأ السيرفر القياسي في حال وجود مشاكل في الاتصال بقاعدة البيانات.
+Projede bulunan 7 rotanın (Routes) tam ve detaylı teknik özellikleri aşağıdadır:
 
 ---
 
-### [2] تسجيل مستخدم جديد (Register)
-* **المسار والطريقة**: `POST /api/users/register`
-* **الوظيفة**: إنشاء مستند مستخدم جديد وتشفير كلمة المرور وتوليد توكن المصادقة له.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
+### [1] Tüm Kullanıcı Listesini Getirme
+
+* **Rota ve Metod**: `GET /api/users`
+* **İşlev**: Sistemde kayıtlı tüm kullanıcıların verilerini içeren eksiksiz bir dizi (array) getirir.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**: Body, params veya query parametresi gerektirmez.
+* **Başarılı Yanıt Yapısı (Success Response 202 Accepted)**:
+* Kod: `202`
+* JSON Formatı:
+```json
+[
   {
+    "_id": "6676ba5cc97b4f5352c349e1",
+    "email": "user1@example.com",
+    "username": "financial_user",
+    "password": "$2a$10$xyzT... (Not: Parola hash'i de döndürülmektedir)",
+    "age": "30",
+    "createdAt": "2026-06-22T12:30:20.123Z",
+    "updatedAt": "2026-06-22T12:30:20.123Z",
+    "__v": 0
+  },
+  {
+    "_id": "6676ba5cc97b4f5352c349e2",
+    "email": "user2@example.com",
+    "username": "investor_pro",
+    "password": "$2a$10$abcD... (Not: Parola hash'i de döndürülmektedir)",
+    "age": "25",
+    "createdAt": "2026-06-22T12:31:00.456Z",
+    "updatedAt": "2026-06-22T12:31:00.456Z",
+    "__v": 0
+  }
+]
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 5xx/4xx)**:
+Veritabanı bağlantı sorunlarında standart sunucu hatası döndürür.
+
+---
+
+### [2] Yeni Kullanıcı Kaydı (Register)
+
+* **Rota ve Metod**: `POST /api/users/register`
+* **İşlev**: Yeni bir kullanıcı belgesi oluşturur, parolayı hash'ler ve ona bir kimlik doğrulama token'ı üretir.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi (Request Body):
+```json
+{
+  "email": "user@example.com",
+  "username": "johndoe",
+  "password": "StrongPassword123!",
+  "age": "28"
+}
+
+```
+
+
+* **Joi ile Doğrulama Kuralları (Validation Rules)**:
+* `email`: String, zorunlu, geçerli e-posta formatı, trim uygulanır.
+* `username`: String, zorunlu, boşluk barındıramaz, uzunluğu 1 ile 200 karakter arasında olmalıdır.
+* `password`: Zorunlu. Parola karmaşıklığı kurallarına (Joi-Password-Complexity) tabidir: en az 1 büyük harf, 1 küçük harf, 1 rakam, 1 özel karakter içermeli ve minimum 8 karakter olmalıdır.
+* `age`: String, zorunlu.
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 201 Created)**:
+* Kod: `201`
+* JSON Formatı:
+```json
+{
+  "message": "İşlem başarılı",
+  "success": true,
+  "data": {
+    "_id": "6676ba5cc97b4f5352c349e1",
     "email": "user@example.com",
     "username": "johndoe",
-    "password": "StrongPassword123!",
-    "age": "28"
+    "age": "28",
+    "createdAt": "2026-06-22T12:55:00.000Z",
+    "updatedAt": "2026-06-22T12:55:00.000Z",
+    "__v": 0,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzZiYTVjYzk3YjRmNTM1MmMzNDllMSIsImlhdCI6MTc4MjE0OTMwMH0..."
   }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `email`: نص، إجباري، صيغة بريد إلكتروني صحيحة، يتم عمل trim.
-    - `username`: نص، إجباري، لا يحتوي على مسافات زائدة، طوله من 1 إلى 200 حرف.
-    - `password`: إجباري، يتطلب تعقيد كلمة مرور (Joi-Password-Complexity) والذي يفرض وجود حرف كبير، حرف صغير، رقم، رمز خاص، وبطول لا يقل عن 8 أحرف.
-    - `age`: نص، إجباري.
-* **شكل الاستجابة الناجحة (Success Response 201 Created)**:
-  * الرمز: `201`
-  * شكل الاستجابة (JSON):
-    ```json
-    {
-      "message": "İşlem başarılı",
-      "success": true,
-      "data": {
-        "_id": "6676ba5cc97b4f5352c349e1",
-        "email": "user@example.com",
-        "username": "johndoe",
-        "age": "28",
-        "createdAt": "2026-06-22T12:55:00.000Z",
-        "updatedAt": "2026-06-22T12:55:00.000Z",
-        "__v": 0,
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzZiYTVjYzk3YjRmNTM1MmMzNDllMSIsImlhdCI6MTc4MjE0OTMwMH0..."
-      }
-    }
-    ```
-* **شكل استجابة الخطأ (Error Response 400 Bad Request)**:
-  * في حال فشل التحقق من صحة المدخلات (Joi Validation Error)، يرجع الباك إند رسالة الخطأ كـ **نص صريح داخل الـ JSON (JSON String Literal)** وليس ككائن، على النحو التالي:
-    ```json
-    "\"email\" must be a valid email"
-    ```
-  * في حال كان البريد الإلكتروني مسجلاً مسبقاً:
-    ```json
-    "kullanici daha once kayit yapmistir"
-    ```
-  * في حال كان اسم المستخدم مسجلاً مسبقاً:
-    ```json
-    "lutfen baska bir kullanici adi kullaniniz "
-    ```
+}
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 400 Bad Request)**:
+* Girdi doğrulama hatası (Joi Validation Error) durumunda backend, hatayı bir JSON objesi olarak değil, **doğrudan düz string (JSON String Literal)** olarak döndürür:
+```json
+"\"email\" must be a valid email"
+
+```
+
+
+* E-posta daha önce kayıtlıysa:
+```json
+"kullanici daha once kayit yapmistir"
+
+```
+
+
+* Kullanıcı adı daha önce alınmışsa:
+```json
+"lutfen baska bir kullanici adi kullaniniz "
+
+```
+
+
+
+
 
 ---
 
-### [3] تسجيل دخول المستخدم (Login)
-* **المسار والطريقة**: `POST /api/users/login`
-* **الوظيفة**: التحقق من صحة بيانات الدخول وإصدار توكن المصادقة للمستخدم.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
-  {
+### [3] Kullanıcı Girişi (Login)
+
+* **Rota ve Metod**: `POST /api/users/login`
+* **İşlev**: Giriş bilgilerinin doğruluğunu kontrol eder ve kullanıcıya yetkilendirme token'ı tahsis eder.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi:
+```json
+{
+  "email": "user@example.com",
+  "password": "StrongPassword123!"
+}
+
+```
+
+
+* **Joi ile Doğrulama Kuralları**:
+* `email`: String, zorunlu, geçerli e-posta formatı, trim uygulanır.
+* `password`: String, zorunlu, trim uygulanır.
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 200 OK)**:
+* Kod: `200`
+* JSON Formatı:
+```json
+{
+  "message": "İşlem başarılı",
+  "success": true,
+  "data": {
+    "_id": "6676ba5cc97b4f5352c349e1",
     "email": "user@example.com",
-    "password": "StrongPassword123!"
+    "username": "johndoe",
+    "age": "28",
+    "createdAt": "2026-06-22T12:55:00.000Z",
+    "updatedAt": "2026-06-22T12:55:00.000Z",
+    "__v": 0,
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzZiYTVjYzk3YjRmNTM1MmMzNDllMSIsImlhdCI6MTc4MjE0OTMwMH0..."
   }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `email`: نص، إجباري، صيغة بريد إلكتروني صحيحة، مع عمل trim.
-    - `password`: نص، إجباري، مع عمل trim.
-* **شكل الاستجابة الناجحة (Success Response 200 OK)**:
-  * الرمز: `200`
-  * شكل الاستجابة (JSON):
-    ```json
-    {
-      "message": "İşlem başarılı",
-      "success": true,
-      "data": {
-        "_id": "6676ba5cc97b4f5352c349e1",
-        "email": "user@example.com",
-        "username": "johndoe",
-        "age": "28",
-        "createdAt": "2026-06-22T12:55:00.000Z",
-        "updatedAt": "2026-06-22T12:55:00.000Z",
-        "__v": 0,
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzZiYTVjYzk3YjRmNTM1MmMzNDllMSIsImlhdCI6MTc4MjE0OTMwMH0..."
-      }
-    }
-    ```
-* **شكل استجابة الخطأ (Error Response 400 Bad Request)**:
-  * في حال فشل التحقق من صحة المدخلات (Joi Validation Error)، يرجع الباك إند رسالة الخطأ كـ **نص صريح (JSON String)**:
-    ```json
-    "\"password\" is required"
-    ```
-  * في حال عدم العثور على البريد الإلكتروني في قاعدة البيانات:
-    ```json
-    "Kullanici epostasi yanlistir "
-    ```
-  * في حال كانت كلمة المرور غير صحيحة:
-    ```json
-    "Kullanici  sifresi yanlistir "
-    ```
+}
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 400 Bad Request)**:
+* Joi doğrulama hatası durumunda **düz JSON string'i** döner:
+```json
+"\"password\" is required"
+
+```
+
+
+* Veritabanında e-posta bulunamazsa:
+```json
+"Kullanici epostasi yanlistir "
+
+```
+
+
+* Parola eşleşmezse:
+```json
+"Kullanici  sifresi yanlistir "
+
+```
+
+
+
+
 
 ---
 
-### [4] جلب قائمة الأسعار التاريخية للسهم (Historical Prices)
-* **المسار والطريقة**: `POST /api/company/prices`
-* **الوظيفة**: جلب أسعار الإغلاق اليومية لرمز شركة معين بين تاريخين محددين من الـ Tiingo API.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
+### [4] Hisse Senedi Geçmiş Fiyat Listesini Getirme (Historical Prices)
+
+* **Rota ve Metod**: `POST /api/company/prices`
+* **İşlev**: Belirtilen iki tarih arasında, belirli bir şirkete ait günlük kapanış fiyatlarını Tiingo API üzerinden çeker.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi:
+```json
+{
+  "sDate": "2026-01-01",
+  "eDate": "2026-01-10",
+  "symbol": "AAPL"
+}
+
+```
+
+
+* **Joi ile Doğrulama Kuralları**:
+* `sDate`: Geçerli tarih, zorunlu.
+* `eDate`: Geçerli tarih, zorunlu.
+* `symbol`: String, zorunlu. **Yalnızca desteklenen semboller listesinden biri olmalıdır** (`companySymbol` dizisinde tanımlananlar).
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 200 OK)**:
+* Kod: `200`
+* Filtrelenmiş tarih ve kapanış fiyatlarını içeren obje dizisi:
+```json
+[
   {
-    "sDate": "2026-01-01",
-    "eDate": "2026-01-10",
-    "symbol": "AAPL"
-  }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `sDate`: تاريخ صالح، إجباري.
-    - `eDate`: تاريخ صالح، إجباري.
-    - `symbol`: نص، إجباري، **ويجب أن يكون حصرياً من قائمة الرموز المدعومة** (المعرفة في مصفوفة `companySymbol`).
-* **شكل الاستجابة الناجحة (Success Response 200 OK)**:
-  * الرمز: `200`
-  * شكل الاستجابة (JSON): مصفوفة من العناصر المحتوية على التاريخ وسعر الإغلاق بعد الفلترة:
-    ```json
-    [
-      {
-        "tarih": "2026-01-02",
-        "kapanisFiyati": 179.25
-      },
-      {
-        "tarih": "2026-01-05",
-        "kapanisFiyati": 181.12
-      },
-      {
-        "tarih": "2026-01-06",
-        "kapanisFiyati": 180.5
-      }
-    ]
-    ```
-* **شكل استجابة الخطأ (Error Response 400 Bad Request)**:
-  * في حال فشل التحقق من صحة المدخلات (Joi Validation Error)، يرجع الباك إند رسالة الخطأ كـ **نص صريح (JSON String)**:
-    ```json
-    "\"symbol\" must be one of [AAPL, MSFT, GOOGL, ...]"
-    ```
-
----
-
-### [5] محاكاة أداء الاستثمار دفعة واحدة (Lump Sum Investment)
-* **المسار والطريقة**: `POST /api/company/amount`
-* **الوظيفة**: حساب قيمة الأصول والربح/الخسارة والعائد على الاستثمار لمبلغ تم استثماره في تاريخ الشراء `buyDate` وبيعه بالكامل في تاريخ البيع `saleDate`.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
+    "tarih": "2026-01-02",
+    "kapanisFiyati": 179.25
+  },
   {
-    "buyDate": "2026-01-05",
-    "saleDate": "2026-01-09",
-    "amount": 5000,
-    "symbol": "MSFT"
-  }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `buyDate`: تاريخ صالح، إجباري. **يجب ألا يقع في عطلة نهاية الأسبوع (السبت أو الأحد)**.
-    - `saleDate`: تاريخ صالح، إجباري. **يجب ألا يقع في عطلة نهاية الأسبوع (السبت أو الأحد)**.
-    - `amount`: رقم، إجباري (رأس المال المستثمر).
-    - `symbol`: نص، إجباري، ويجب أن يكون حصرياً من قائمة الرموز المدعومة.
-* **شكل الاستجابة الناجحة (Success Response 200 OK)**:
-  * الرمز: `200`
-  * شكل الاستجابة (JSON):
-    ```json
-    {
-      "success": true,
-      "data": {
-        "yatirilanTutar": 5000,
-        "guncelDeger": 5345.2,
-        "netKarZarar": 345.2,
-        "getiriOrani": "6.9%"
-      }
-    }
-    ```
-* **شكل استجابة الخطأ (Error Response 400 Bad Request)**:
-  * في حال فشل التحقق من Joi أو عند تداخل تاريخ الشراء أو البيع مع عطلة نهاية أسبوع، يعيد النظام كائن JSON يحتوي على الحقل `message` كالتالي:
-    - **مثال لخطأ التحقق**:
-      ```json
-      {
-        "message": "\"amount\" is required"
-      }
-      ```
-    - **مثال لخطأ مصادفة عطلة نهاية الأسبوع**:
-      ```json
-      {
-        "message": "Girdiginiz tarih 2026-01-04 hafta sonuna denk gelmektedir lütfen değiştiriniz "
-      }
-      ```
-
----
-
-### [6] تحليل توقيت السوق (Market Timing Analysis)
-* **المسار والطريقة**: `POST /api/company/timing`
-* **الوظيفة**: تحليل البيانات التاريخية لسهم خلال فترة معينة واستخراج أعلى سعر وصل له وتاريخه وأدنى سعر وتاريخه.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
+    "tarih": "2026-01-05",
+    "kapanisFiyati": 181.12
+  },
   {
-    "sDate": "2026-01-01",
-    "eDate": "2026-01-30",
-    "symbol": "GOOGL"
+    "tarih": "2026-01-06",
+    "kapanisFiyati": 180.5
   }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `sDate`: تاريخ صالح، إجباري.
-    - `eDate`: تاريخ صالح، إجباري.
-    - `symbol`: نص، إجباري، ويجب أن يكون حصرياً من قائمة الرموز المدعومة.
-* **شكل الاستجابة الناجحة (Success Response 200 OK)**:
-  * الرمز: `200`
-  * شكل الاستجابة (JSON):
-    ```json
-    {
-      "enYuksek": {
-        "fiyat": 152.43,
-        "tarih": "2026-01-15"
-      },
-      "enDusuk": {
-        "fiyat": 140.12,
-        "tarih": "2026-01-05"
-      }
-    }
-    ```
-* **شكل استجابة الخطأ (Error Response 400 Bad Request)**:
-  * في حال فشل التحقق من صحة المدخلات (Joi Validation Error)، يرجع الباك إند رسالة الخطأ كـ **نص صريح (JSON String)**:
-    ```json
-    "\"sDate\" is required"
-    ```
+]
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 400 Bad Request)**:
+* Doğrulama başarısız olduğunda düz metin döner:
+```json
+"\"symbol\" must be one of [AAPL, MSFT, GOOGL, ...]"
+
+```
+
+
+
+
 
 ---
 
-### [7] محاكاة الاستثمار الدوري (Dollar Cost Averaging - DCA)
-* **المسار والطريقة**: `POST /api/company/dca`
-* **الوظيفة**: حساب أداء الاستثمار الدوري لمبلغ ثابت يتم استثماره شهرياً (في بداية كل شهر تقويمي يظهر في البيانات) بين تاريخين محددين.
-* **حالة الحماية**: عام (Public).
-* **البيانات المطلوبة (Request Payload)**:
-  يتم تمريرها في جسم الطلب (JSON Request Body):
-  ```json
-  {
-    "sDate": "2025-01-01",
-    "eDate": "2025-12-31",
-    "amount": 200,
-    "symbol": "AAPL"
+### [5] Tek Seferlik Yatırım Performansı Simülasyonu (Lump Sum Investment)
+
+* **Rota ve Metod**: `POST /api/company/amount`
+* **İşlev**: Alım tarihinde (`buyDate`) yatırılan bir tutarın, satış tarihinde (`saleDate`) tamamen satılması durumunda elde edilecek güncel varlık değerini, kâr/zararı ve ROI oranını hesaplar.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi:
+```json
+{
+  "buyDate": "2026-01-05",
+  "saleDate": "2026-01-09",
+  "amount": 5000,
+  "symbol": "MSFT"
+}
+
+```
+
+
+* **Joi ile Doğrulama Kuralları**:
+* `buyDate`: Geçerli tarih, zorunlu. **Hafta sonuna (Cumartesi veya Pazar) denk gelmemelidir.**
+* `saleDate`: Geçerli tarih, zorunlu. **Hafta sonuna (Cumartesi veya Pazar) denk gelmemelidir.**
+* `amount`: Sayı (Number), zorunlu (yatırılan ana para).
+* `symbol`: String, zorunlu, desteklenen semboller listesinden olmalı.
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 200 OK)**:
+* Kod: `200`
+* JSON Formatı:
+```json
+{
+  "success": true,
+  "data": {
+    "yatirilanTutar": 5000,
+    "guncelDeger": 5345.2,
+    "netKarZarar": 345.2,
+    "getiriOrani": "6.9%"
   }
-  ```
-  * **شروط التحقق (Validation Rules) باستخدام Joi**:
-    - `sDate`: تاريخ صالح، إجباري.
-    - `eDate`: تاريخ صالح، إجباري.
-    - `amount`: رقم، إجباري (يمثل المبلغ المودع شهرياً).
-    - `symbol`: نص، إجباري، ويجب أن يكون حصرياً من قائمة الرموز المدعومة.
-* **شكل الاستجابة الناجحة (Success Response 200 OK)**:
-  * الرمز: `200`
-  * شكل الاستجابة (JSON):
-    ```json
-    {
-      "ozet": {
-        "toplamYatirilanTutar": 2400,
-        "guncelPortfoyDegeri": 2743.68,
-        "netKarZarar": 343.68,
-        "getiriOrani": "%14.32",
-        "toplamHisseAdedi": 15.2004,
-        "sonHisseFiyati": 180.5
-      },
-      "islemSayisi": 12,
-      "aylikDetaylar": [
-        {
-          "tarih": "2025-01-02",
-          "fiyat": 172.5,
-          "alinanAdet": 1.1594,
-          "toplamHisse": 1.1594,
-          "toplamMaliyet": 200
-        },
-        {
-          "tarih": "2025-02-03",
-          "fiyat": 175.2,
-          "alinanAdet": 1.1416,
-          "toplamHisse": 2.301,
-          "toplamMaliyet": 400
-        }
-      ]
-    }
-    ```
-* **شكل استجابة الخطأ (تصرف غير متوقع في الباك إند - يرجى قراءة قسم Gotchas)**:
-  > [!CAUTION]
-  > **تنبيه هام جداً لمطور الفرونت إند**: 
-  > عند حدوث خطأ تحقق (Joi) أو خطأ في الاتصال بسيرفر Tiingo الخارجي في هذا المسار بالتحديد، **يقوم الباك إند بإرجاع الرمز `200 OK` ولكن بجسم فارغ (Empty JSON/Null/Undefined) دون إعطاء رمز خطأ 400 أو رسالة خطأ واضحة** وذلك بسبب تعارض برمجي في معالجة الخطأ بين الخدمة والمتحكم.
-  >
-  > يجب على مطور الفرونت إند فحص الاستجابة: إذا كان الكائن المستلم فارغاً أو لا يحتوي على الحقل `ozet`، يجب اعتبار الطلب فاشلاً وعرض رسالة خطأ للمستخدم.
+}
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 400 Bad Request)**:
+* Joi doğrulaması başarısız olduğunda veya tarihlerden biri hafta sonuna denk geldiğinde, sistem `message` alanına sahip standart bir JSON objesi döndürür:
+* **Doğrulama hatası örneği**:
+```json
+{
+  "message": "\"amount\" is required"
+}
+
+```
+
+
+* **Hafta sonuna denk gelme hatası örneği**:
+```json
+{
+  "message": "Girdiginiz tarih 2026-01-04 hafta sonuna denk gelmektedir lütfen değiştiriniz "
+}
+
+```
+
+
+
+
+
+
 
 ---
 
-## 5. الثوابت وحالات النظام (Enums & Global Constants)
+### [6] Piyasa Zamanlaması Analizi (Market Timing Analysis)
 
-يحتوي النظام على مصفوفتين أساسيتين تمثلان قائمة الرموز المدعومة للتداول والاستعلام عن أسعارها ومحاكاة محافظها الاستثمارية.
+* **Rota ve Metod**: `POST /api/company/timing`
+* **İşlev**: Belirli bir zaman aralığındaki hisse senedi verilerini tarayarak ulaştığı en yüksek fiyatı/tarihini ve en düşük fiyatı/tarihini tespit eder.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi:
+```json
+{
+  "sDate": "2026-01-01",
+  "eDate": "2026-01-30",
+  "symbol": "GOOGL"
+}
 
-*المصدر: [companySymbol.models.js](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/models/companySymbol.models.js)*
+```
 
-### الرموز والشركات المدعومة بالكامل
-تحتوي مصفوفة `companySymbolAndName` على الكائنات التالية المكونة من الرمز (`sembol`) واسم الشركة الكامل بالإنجليزية (`isim`):
+
+* **Joi ile Doğrulama Kuralları**:
+* `sDate`: Geçerli tarih, zorunlu.
+* `eDate`: Geçerli tarih, zorunlu.
+* `symbol`: String, zorunlu, desteklenen semboller listesinden olmalı.
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 200 OK)**:
+* Kod: `200`
+* JSON Formatı:
+```json
+{
+  "enYuksek": {
+    "fiyat": 152.43,
+    "tarih": "2026-01-15"
+  },
+  "enDusuk": {
+    "fiyat": 140.12,
+    "tarih": "2026-01-05"
+  }
+}
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Error Response 400 Bad Request)**:
+* Doğrulama hatasında düz JSON string döner:
+```json
+"\"sDate\" is required"
+
+```
+
+
+
+
+
+---
+
+### [7] Düzenli Alım (DCA) Stratejisi Simülasyonu (Dollar Cost Averaging)
+
+* **Rota ve Metod**: `POST /api/company/dca`
+* **İşlev**: İki tarih arasında her ay sabit bir tutarın (verilerde o aya ait görünen ilk işlem gününde) düzenli olarak yatırılması durumundaki yatırım performansını hesaplar.
+* **Koruma Durumu**: Herkese Açık (Public).
+* **Gerekli Veriler (Request Payload)**:
+JSON Gövdesi:
+```json
+{
+  "sDate": "2025-01-01",
+  "eDate": "2025-12-31",
+  "amount": 200,
+  "symbol": "AAPL"
+}
+
+```
+
+
+* **Joi ile Doğrulama Kuralları**:
+* `sDate`: Geçerli tarih, zorunlu.
+* `eDate`: Geçerli tarih, zorunlu.
+* `amount`: Sayı (Number), zorunlu (aylık yatırılan miktar).
+* `symbol`: String, zorunlu, desteklenen semboller listesinden olmalı.
+
+
+
+
+* **Başarılı Yanıt Yapısı (Success Response 200 OK)**:
+* Kod: `200`
+* JSON Formatı:
+```json
+{
+  "ozet": {
+    "toplamYatirilanTutar": 2400,
+    "guncelPortfoyDegeri": 2743.68,
+    "netKarZarar": 343.68,
+    "getiriOrani": "%14.32",
+    "toplamHisseAdedi": 15.2004,
+    "sonHisseFiyati": 180.5
+  },
+  "islemSayisi": 12,
+  "aylikDetaylar": [
+    {
+      "tarih": "2025-01-02",
+      "fiyat": 172.5,
+      "alinanAdet": 1.1594,
+      "toplamHisse": 1.1594,
+      "toplamMaliyet": 200
+    },
+    {
+      "tarih": "2025-02-03",
+      "fiyat": 175.2,
+      "alinanAdet": 1.1416,
+      "toplamHisse": 2.301,
+      "toplamMaliyet": 400
+    }
+  ]
+}
+
+```
+
+
+
+
+* **Hata Yanıtı Yapısı (Backend'de Beklenmeyen Davranış - Lütfen "Kritik İpuçları" Bölümünü Okuyun)**:
+> [!CAUTION]
+> **Frontend Geliştiricisi İçin Çok Önemli Uyarı**:
+> Bu spesifik uç noktada bir doğrulama hatası (Joi) veya harici Tiingo sunucusuyla bir bağlantı problemi yaşandığında; servis ile controller arasındaki bir hata yakalama uyuşmazlığı nedeniyle, **backend 400 hata kodu veya açıklayıcı bir mesaj fırlatmak yerine gövdesi boş (Empty JSON / Null / Undefined) bir `200 OK` yanıtı döndürür.**
+> Frontend tarafı gelen yanıtı mutlaka denetlemelidir: Gelen obje boşsa veya içinde `ozet` anahtarı yoksa, istek başarısız sayılmalı ve kullanıcıya arayüzde bir hata mesajı gösterilmelidir.
+
+
+
+---
+
+## 5. Sistem Sabitleri ve Tanımlı Değerler (Enums & Global Constants)
+
+Sistemde, işlem yapmak, fiyat sorgulamak ve portföy simülasyonları oluşturmak için desteklenen şirket sembollerinin listesini barındıran iki temel dizi bulunmaktadır.
+
+*Kaynak: [companySymbol.models.js*](file:///c:/Users/yusuf_pc/Desktop/FinancalProjecket1-main/models/companySymbol.models.js)
+
+### Tam Desteklenen Şirketler ve Sembolleri
+
+`companySymbolAndName` dizisi, sembol (`sembol`) ve şirketin İngilizce tam adından (`isim`) oluşan şu objeleri barındırır:
 
 ```json
 [
@@ -539,38 +679,34 @@
   { "sembol": "DE", "isim": "Deere & Company" },
   { "sembol": "WM", "isim": "Waste Management Inc." }
 ]
+
 ```
 
 ---
 
-## 6. ملاحظات حرجة لمطور الفرونت إند (Gotchas & Edge Cases)
+## 6. Frontend Geliştiricisi İçin Kritik İpuçları ve İstisnai Durumlar (Gotchas & Edge Cases)
 
-يجب على مطور الفرونت إند الانتباه الكامل للسلوكيات التالية لتجنب انهيار الواجهة أو ظهور أخطاء غير مفهومة للمستخدم:
+Arayüzün çökmesini veya kullanıcıya anlamsız hatalar yansımasını önlemek için Frontend geliştiricisinin aşağıdaki senaryolara tam anlamıyla dikkat etmesi gerekir:
 
-1. **طريقة تمرير التوكن**:
-   تذكر دائماً أن التوكن يرسل كـ `token` في الـ Header وليس كـ Bearer token في `Authorization`.
-   
-2. **صيغة التواريخ والفلترة اليومية**:
-   يقبل الباك إند التواريخ بصيغة `YYYY-MM-DD` (أو أي صيغة يقبلها كائن التاريخ في جافاسكريبت). يقوم الباك إند بتقسيم التاريخ عند حرف الـ `"T"` لأخذ الجزء الأول فقط عند التعامل مع استجابات الأسهم لتظهر بصيغة `YYYY-MM-DD`.
+1. **Token Aktarım Yöntemi**:
+Token'ın `Authorization` başlığında bir Bearer token olarak değil, Header içerisinde doğrudan `token` adıyla gönderilmesi gerektiğini asla unutmayın.
+2. **Tarih Formatı ve Günlük Filtreleme**:
+Backend, tarihleri `YYYY-MM-DD` formatında (veya JavaScript Date objesinin kabul ettiği herhangi bir formatta) kabul eder. Hisse senedi yanıtlarını işlerken `YYYY-MM-DD` formatında göstermek için metni `"T"` harfinden bölerek yalnızca ilk kısmını alır.
+3. **Hafta Sonları (Weekends)**:
+Borsalar Cumartesi ve Pazar günleri kapalıdır. Bu yüzden:
+* `/api/company/amount` (Lump Sum) rotası alış ve satış tarihlerini denetler; bunlardan biri Cumartesi veya Pazar gününe denk gelirse istek anında başarısız olur ve 400 hata kodu döner.
+* Frontend tarafı, sunucu hatalarını sıfıra indirmek ve kusursuz bir deneyim sunmak adına, arayüzdeki tarih seçiciyi (Date Picker) kullanıcının Cumartesi ve Pazar günlerini seçemeyeceği şekilde kısıtlamalıdır.
 
-3. **أيام نهاية الأسبوع (Weekends)**:
-   أسواق الأسهم مغلقة يومي السبت والأحد. لذلك:
-   - مسار `/api/company/amount` (Lump Sum) يقوم بالتحقق من تاريخ الشراء والبيع فإذا وافق أحدهما يوم سبت أو أحد سيفشل الطلب فوراً ويعيد خطأ كود 400.
-   - يجب على الفرونت إند برمجة حقل اختيار التاريخ (Date Picker) بحيث يمنع المستخدم من اختيار يومي السبت والأحد لضمان تجربة مستخدم خالية من أخطاء السيرفر.
 
-4. **توقيت الاستثمار في DCA**:
-   تقوم خوارزمية DCA بشراء الأسهم في بداية كل شهر يظهر في تيار البيانات التاريخية المستلمة من Tiingo. يتم تجميع إجمالي عدد الأسهم المشتراة مضروباً في سعر الإغلاق لآخر يوم في التاريخ المحدد لتحديد القيمة الإجمالية للمحفظة في نهاية المحاكاة.
-
-5. **عرض كلمة مرور المستخدم في قائمة المستخدمين**:
-   مسار `GET /api/users` يعيد جميع بيانات المستخدمين بما في ذلك الهاش الخاص بكلمة المرور (`password`). يجب عدم عرض هذا الحقل نهائياً في الواجهات لأسباب أمنية.
-
-6. **تصرف الخطأ الفريد لمسار الـ DCA**:
-   في حال حدوث خطأ في مسار `POST /api/company/dca` (سواء بسبب عدم وجود بيانات في تلك الفترة، أو مشكلة في مفتاح Tiingo الخارجي، أو خطأ تحقق Joi)، فإن الباك إند يرجع الرمز `200 OK` ولكن بجسم فارغ (Empty JSON/Null/Undefined) دون إعطاء رمز خطأ 400 أو رسالة خطأ واضحة.
-   *الحل على الفرونت إند:* تحقق دائماً مما إذا كانت استجابة المسار خالية من كائن الخلاصة `ozet` قبل محاولة قراءته، وإلا اعتبر الطلب فاشلاً واعرض رسالة خطأ ملائمة للمستخدم.
-
-7. **بنية رسائل الأخطاء الـ String**:
-   ترجع معظم المسارات عند فشل التحقق أو وقوع خطأ محدد رسالة الخطأ كـ **سلسلة نصية خام (Raw JSON String)** بدلاً من الكائن المعتاد `{ "message": "..." }`. الاستثناء الوحيد هو مسار Lump Sum (`/api/company/amount`) الذي يرجع كائن خطأ منظم يحتوي على `{ "message": "..." }`.
-   *الحل على الفرونت إند:* يجب معالجة استجابات الخطأ بشكل مرن (بحيث يقرأ النص مباشرة إذا كان الخطأ عبارة عن string، أو يقرأ خاصية `message` إذا كان كائناً).
-
-8. **الاعتماد على مفتاح Tiingo API**:
-   جميع وظائف الأسهم تعتمد بالكامل على المتغير `TIINGO_API_KEY` المعرف في البيئة. في حال نفاد حد الاستهلاك المجاني أو عدم إعداد المفتاح بشكل صحيح، ستفشل جميع مسارات الـ `/api/company/*` وتعيد أخطاء (غالباً 500 أو استجابات فارغة).
+4. **DCA Alım Zamanlaması**:
+DCA algoritması, Tiingo'dan gelen geçmiş veri akışında her ayın görünen ilk işlem gününde hisse alımı yapar. Simülasyon sonunda toplam portföy değerini bulmak için, satın alınan toplam hisse adedini belirtilen tarih aralığının son gününün kapanış fiyatıyla çarpar.
+5. **Kullanıcı Listesinde Parola Hash'inin Görünmesi**:
+`GET /api/users` rotası, parola hash'i (`password`) dahil olmak üzere tüm kullanıcı verilerini döndürür. Güvenlik gerekçesiyle bu alan arayüzde kesinlikle hiçbir yerde ekrana basılmamalıdır.
+6. **DCA Rotasına Özgü Hata Davranışı**:
+`POST /api/company/dca` rotasında bir hata meydana geldiğinde (o döneme ait veri bulunamaması, harici Tiingo API anahtarı sorunu veya Joi doğrulama hatası fark etmeksizin), backend açıklayıcı bir 400 hatası vermek yerine **boş bir gövdeyle `200 OK**` döndürür.
+*Frontend tarafındaki çözüm:* Yanıtı okumaya çalışmadan önce her zaman ana `ozet` objesinin var olup olmadığını kontrol edin; yoksa isteği başarısız kabul edip kullanıcıya uygun bir uyarı verin.
+7. **Düz Metin (String) Hata Mesajı Yapıları**:
+Çoğu rota, doğrulama başarısız olduğunda veya bir hata oluştuğunda alıştığımız `{ "message": "..." }` objesi yerine **ham JSON metni (Raw JSON String)** döndürür. Bunun tek istisnası, düzenli bir hata objesi `{ "message": "..." }` döndüren Lump Sum (`/api/company/amount`) rotasıdır.
+*Frontend tarafındaki çözüm:* Hata yanıtları esnek bir şekilde işlenmelidir (hata bir string ise doğrudan kendisi okunmalı, bir obje ise `message` özelliği kontrol edilmelidir).
+8. **Tiingo API Anahtarı Bağımlılığı**:
+Tüm hisse senedi fonksiyonları tamamen ortam değişkenlerindeki `TIINGO_API_KEY` değerine bağlıdır. Ücretsiz kullanım limitinin dolması veya anahtarın yanlış yapılandırılması durumunda tüm `/api/company/*` rotaları patlayacak ve hata (genellikle 500 veya boş yanıt) döndürecektir.
