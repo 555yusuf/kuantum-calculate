@@ -32,7 +32,7 @@ const calculateDCA = async (obj) => {
       const yearAndMonth = fullDate.substring(0, 7);
 
       if (yearAndMonth !== lastProcessedMonth) {
-        const priceOfDay = day.close;
+        const priceOfDay = day.adjClose;
         const sharesBought = obj.amount / priceOfDay;
 
     

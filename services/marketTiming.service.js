@@ -23,8 +23,8 @@ const analyzeMarketTiming = async (obj) => {
   let troughDay = data[0];
 
   data.forEach((day) => {
-    if (day.close > peakDay.close) peakDay = day;
-    if (day.close < troughDay.close) troughDay = day;
+    if (day.adjClose > peakDay.close) peakDay = day;
+    if (day.adjClose < troughDay.close) troughDay = day;
   });
 
   return {

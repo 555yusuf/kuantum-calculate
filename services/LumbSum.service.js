@@ -38,10 +38,10 @@ const LumbSum = async (obj) => {
     );
   }
 
-  let res1 =  await apiResponse(obj.buyDate);
-  const buyPrice =res1.data[0].close;
+  let res1 = await apiResponse(obj.buyDate);
+  const buyPrice = res1.data[0].adjClose;
   let res2 = await apiResponse(obj.saleDate);
-  const saleAmount = res2.data[0].close;
+  const saleAmount = res2.data[0].adjClose;
 
   let stocks = obj.amount / buyPrice;
 
@@ -50,8 +50,8 @@ const LumbSum = async (obj) => {
   let newAmount = stocks * saleAmount;
 
   return {
-    success : true,
-    result : newAmount,
+    success: true,
+    result: newAmount,
   };
 };
 
