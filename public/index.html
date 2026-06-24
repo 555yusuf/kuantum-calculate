@@ -247,7 +247,7 @@
       
       <div class="academic-panel" style="background-color: #EDF2F7; border-left: 5px solid var(--univ-blue);">
         <h2 class="serif-heading mb-3">Hakkımızda: Kuantum Finansal Simülasyon Laboratuvarı</h2>
-        <p style="font-size: 15px; color: #333;">Bu platform, Zonguldak Bülent Ecevit Üniversitesi Bilgisayar Mühendisliği ve Finansal Teknolojiler çalışma grupları tarafından geliştirilmiş açık erişimli bir <strong>Kantitatif Borsa Analiz</strong> simülatörüdür. Gerçek zamanlı Tiingo API altyapısını kullanarak tarihsel varlık getirilerini, toplu sermaye projeksiyonlarını (Lump Sum) ve Dolar Maliyet Ortalaması (DCA) stratejilerini bilimsel hassasiyetle test etmenizi sağlar.</p>
+        <p style="font-size: 15px; color: #333;">Bu platform, finansal piyasaların geçmiş verilerini ekonometrik modellerle analiz etmek amacıyla geliştirilmiş bağımsız bir Kantitatif Borsa Analiz simülatörüdür. Gerçek zamanlı Tiingo API altyapısını kullanarak tarihsel varlık getirilerini, toplu sermaye projeksiyonlarını (Lump Sum) ve Dolar Maliyet Ortalaması (DCA) stratejilerini yüksek veri hassasiyetiyle test etmenizi sağlar.</p>
       </div>
 
       <h3 class="serif-heading border-bottom pb-2 mb-4">Akademik Araştırma Modülleri</h3>
@@ -485,7 +485,7 @@
         <form id="register-form">
           <div class="modal-body p-4">
             <div class="mb-3"><label class="form-label">Kurumsal E-posta</label><input type="email" class="form-control" id="reg-email" required></div>
-            <div class="mb-3"><label class="form-label">Kullanıcı Kullanıcı Adı</label><input type="text" class="form-control" id="reg-username" required></div>
+            <div class="mb-3"><label class="form-label">Kullanıcı Adı</label><input type="text" class="form-control" id="reg-username" required></div>
             <div class="mb-3"><label class="form-label">Yaş</label><input type="number" min="18" class="form-control" id="reg-age" required></div>
             <div class="mb-3">
               <label class="form-label">Güvenlik Şifresi</label>
@@ -561,7 +561,7 @@
   
   <script>
     const companyList = [
-      { sembol: "AAPL", isim: "Apple Inc." }, { sembol: "MSFT", isim: "Microsoft Corporation" }, { sembol: "GOOGL", isim: "Alphabet Inc." }, { sembol: "AMZN", isim: "Amazon.com Inc." }, { sembol: "META", isim: "Meta Platforms Inc." }, { sembol: "NVDA", isim: "NVIDIA Corporation" }, { sembol: "TSLA", isim: "Tesla Inc." }, { sembol: "HPQ", isim: "HP Inc." }, { sembol: "JNJ", isim: "Johnson & Johnson" }, { sembol: "V", isim: "Visa Inc." }, { sembol: "WMT", isim: "Walmart Inc." }, { sembol: "JPM", isim: "JPMorgan Chase & Co." }, { sembol: "PG", isim: "The Procter & Gamble Company" }, { sembol: "MA", isim: "Mastercard Incorporated" }, { sembol: "UNH", isim: "UnitedHealth Group Incorporated" }, { sembol: "DIS", isim: "The Walt Disney Company" }, { sembol: "HD", isim: "The Home Depot Inc." }, { sembol: "BAC", isim: "Bank of America Corporation" }, { sembol: "XOM", isim: "Exxon Mobil Corporation" }, { sembol: "CVX", isim: "Chevron Corporation" }, { sembol: "KO", isim: "The Coca-Cola Company" }, { sembol: "PEP", isim: "PepsiCo Inc." }, { sembol: "COST", isim: "Costco Wholesale Corporation" }, { sembol: "PFE", isim: "Pfizer Inc." }, { sembol: "MRK", isim: "Merck & Co. Inc." }, { sembol: "TMO", isim: "Thermo Fisher Scientific Inc." }, { sembol: "MCD", isim: "McDonald's Corporation" }, { sembol: "CRM", isim: "Salesforce Inc." }, { sembol: "CSCO", isim: "Cisco Systems Inc." }, { sembol: "ABT", isim: "Abbott Laboratories" }, { sembol: "ACN", isim: "Accenture plc" }, { sembol: "NFLX", isim: "Netflix Inc." }, { sembol: "ADBE", isim: "Adobe Inc." }, { sembol: "INTC", isim: "Intel Corporation" }, { sembol: "AMD", isim: "Advanced Micro Devices Inc." }, { sembol: "CMCSA", isim: "Comcast Corporation" }, { sembol: "NKE", isim: "NIKE Inc." }, { sembol: "TXN", isim: "Texas Instruments Incorporated" }, { sembol: "PM", isim: "Philip Morris International Inc." }, { sembol: "LIN", isim: "Linde plc" }, { sembol: "NEE", isim: "NextEra Energy Inc." }, { sembol: "UNP", isim: "Union Pacific Corporation" }, { sembol: "ORCL", isim: "Oracle Corporation" }, { sembol: "WFC", isim: "Wells Fargo & Company" }, { sembol: "QCOM", isim: "QUALCOMM Incorporated" }, { sembol: "HON", isim: "Honeywell International Inc." }, { sembol: "UPS", isim: "United Parcel Service Inc." }, { sembol: "RTX", isim: "RTX Corporation" }, { sembol: "BA", isim: "The Boeing Company" }, { sembol: "IBM", isim: "International Business Machines Corporation" }, { sembol: "LLY", isim: "Eli Lilly and Company" }, { sembol: "SBUX", isim: "Starbucks Corporation" }, { sembol: "GE", isim: "General Electric Company" }, { sembol: "CAT", isim: "Caterpillar Inc." }, { sembol: "GS", isim: "The Goldman Sachs Group Inc." }, { sembol: "MS", isim: "Morgan Stanley" }, { sembol: "BLK", isim: "BlackRock Inc." }, { sembol: "MMM", isim: "3M Company" }, { sembol: "C", isim: "Citigroup Inc." }, { sembol: "AXP", isim: "American Express Company" }, { sembol: "T", isim: "AT&T Inc." }, { sembol: "VZ", isim: "Verizon Communications Inc." }, { sembol: "F", isim: "Ford Motor Company" }, { sembol: "GM", isim: "General Motors Company" }, { sembol: "TGT", isim: "Target Corporation" }, { sembol: "LOW", isim: "Lowe's Companies Inc." }, { sembol: "CVS", isim: "CVS Health Corporation" }, { sembol: "WBA", isim: "Walgreens Boots Alliance Inc." }, { sembol: "BMY", isim: "Bristol-Myers Squibb Company" }, { sembol: "GILD", isim: "Gilead Sciences Inc." }, { sembol: "AMGN", isim: "Amgen Inc." }, { sembol: "ISRG", isim: "Intuitive Surgical Inc." }, { sembol: "MDT", isim: "Medtronic plc" }, { sembol: "SYK", isim: "Stryker Corporation" }, { sembol: "SPGI", isim: "S&P Global Inc." }, { sembol: "INTU", isim: "Intuit Inc." }, { sembol: "NOW", "isim": "ServiceNow Inc." }, { sembol: "PYPL", isim: "PayPal Holdings Inc." }, { sembol: "SQ", isim: "Block Inc." }, { sembol: "UBER", isim: "Uber Technologies Inc." }, { sembol: "ABNB", isim: "Airbnb Inc." }, { sembol: "SNOW", isim: "Snowflake Inc." }, { sembol: "PLTR", isim: "Palantir Technologies Inc." }, { sembol: "ROKU", isim: "Roku Inc." }, { sembol: "ZM", isim: "Zoom Video Communications Inc." }, { sembol: "DOCU", isim: "DocuSign Inc." }, { sembol: "SPOT", isim: "Spotify Technology S.A." }, { sembol: "SHOP", isim: "Shopify Inc." }, { sembol: "CRWD", isim: "CrowdStrike Holdings Inc." }, { sembol: "NET", isim: "Cloudflare Inc." }, { sembol: "DDOG", isim: "Datadog Inc." }, { sembol: "TEAM", isim: "Atlassian Corporation" }, { sembol: "OKTA", isim: "Okta Inc." }, { sembol: "ZS", isim: "Zscaler Inc." }, { sembol: "PANW", isim: "Palo Alto Networks Inc." }, { sembol: "FTNT", isim: "Fortinet Inc." }, { sembol: "LMT", isim: "Lockheed Martin Corporation" }, { sembol: "NOC", isim: "Northrop Grumman Corporation" }, { sembol: "GD", isim: "General Dynamics Corporation" }, { sembol: "DE", isim: "Deere & Company" }, { sembol: "WM", isim: "Waste Management Inc." }
+      { sembol: "AAPL", isim: "Apple Inc." }, { sembol: "MSFT", isim: "Microsoft Corporation" }, { sembol: "GOOGL", isim: "Alphabet Inc." }, { sembol: "AMZN", isim: "Amazon.com Inc." }, { sembol: "META", isim: "Meta Platforms Inc." }, { sembol: "NVDA", isim: "NVIDIA Corporation" }, { sembol: "TSLA", isim: "Tesla Inc." }, { sembol: "HPQ", isim: "HP Inc." }, { sembol: "JNJ", isim: "Johnson & Johnson" }, { sembol: "V", isim: "Visa Inc." }, { sembol: "WMT", isim: "Walmart Inc." }, { sembol: "JPM", isim: "JPMorgan Chase & Co." }, { sembol: "PG", isim: "The Procter & Gamble Company" }, { sembol: "MA", isim: "Mastercard Incorporated" }, { sembol: "UNH", isim: "UnitedHealth Group Incorporated" }, { sembol: "DIS", isim: "The Walt Disney Company" }, { sembol: "HD", inclin: "The Home Depot Inc." }, { sembol: "BAC", isim: "Bank of America Corporation" }, { sembol: "XOM", isim: "Exxon Mobil Corporation" }, { sembol: "CVX", isim: "Chevron Corporation" }, { sembol: "KO", isim: "The Coca-Cola Company" }, { sembol: "PEP", isim: "PepsiCo Inc." }, { sembol: "COST", isim: "Costco Wholesale Corporation" }, { sembol: "PFE", isim: "Pfizer Inc." }, { sembol: "MRK", isim: "Merck & Co. Inc." }, { sembol: "TMO", isim: "Thermo Fisher Scientific Inc." }, { sembol: "MCD", isim: "McDonald's Corporation" }, { sembol: "CRM", isim: "Salesforce Inc." }, { sembol: "CSCO", isim: "Cisco Systems Inc." }, { sembol: "ABT", isim: "Abbott Laboratories" }, { sembol: "ACN", isim: "Accenture plc" }, { sembol: "NFLX", isim: "Netflix Inc." }, { sembol: "ADBE", isim: "Adobe Inc." }, { sembol: "INTC", isim: "Intel Corporation" }, { sembol: "AMD", isim: "Advanced Micro Devices Inc." }, { sembol: "CMCSA", isim: "Comcast Corporation" }, { sembol: "NKE", isim: "NIKE Inc." }, { sembol: "TXN", isim: "Texas Instruments Incorporated" }, { sembol: "PM", isim: "Philip Morris International Inc." }, { sembol: "LIN", isim: "Linde plc" }, { sembol: "NEE", isim: "NextEra Energy Inc." }, { sembol: "UNP", isim: "Union Pacific Corporation" }, { sembol: "ORCL", isim: "Oracle Corporation" }, { sembol: "WFC", isim: "Wells Fargo & Company" }, { sembol: "QCOM", isim: "QUALCOMM Incorporated" }, { sembol: "HON", isim: "Honeywell International Inc." }, { sembol: "UPS", isim: "United Parcel Service Inc." }, { sembol: "RTX", isim: "RTX Corporation" }, { sembol: "BA", isim: "The Boeing Company" }, { sembol: "IBM", isim: "International Business Machines Corporation" }, { sembol: "LLY", isim: "Eli Lilly and Company" }, { sembol: "SBUX", isim: "Starbucks Corporation" }, { sembol: "GE", isim: "General Electric Company" }, { sembol: "CAT", isim: "Caterpillar Inc." }, { sembol: "GS", isim: "The Goldman Sachs Group Inc." }, { sembol: "MS", isim: "Morgan Stanley" }, { sembol: "BLK", isim: "BlackRock Inc." }, { sembol: "MMM", isim: "3M Company" }, { sembol: "C", isim: "Citigroup Inc." }, { sembol: "AXP", isim: "American Express Company" }, { sembol: "T", isim: "AT&T Inc." }, { sembol: "VZ", isim: "Verizon Communications Inc." }, { sembol: "F", isim: "Ford Motor Company" }, { sembol: "GM", isim: "General Motors Company" }, { sembol: "TGT", isim: "Target Corporation" }, { sembol: "LOW", isim: "Lowe's Companies Inc." }, { sembol: "CVS", isim: "CVS Health Corporation" }, { sembol: "WBA", isim: "Walgreens Boots Alliance Inc." }, { sembol: "BMY", isim: "Bristol-Myers Squibb Company" }, { sembol: "GILD", isim: "Gilead Sciences Inc." }, { sembol: "AMGN", isim: "Amgen Inc." }, { sembol: "ISRG", isim: "Intuitive Surgical Inc." }, { sembol: "MDT", isim: "Medtronic plc" }, { sembol: "SYK", isim: "Stryker Corporation" }, { sembol: "SPGI", isim: "S&P Global Inc." }, { sembol: "INTU", isim: "Intuit Inc." }, { sembol: "NOW", isim: "ServiceNow Inc." }, { sembol: "PYPL", isim: "PayPal Holdings Inc." }, { sembol: "SQ", isim: "Block Inc." }, { sembol: "UBER", isim: "Uber Technologies Inc." }, { sembol: "ABNB", isim: "Airbnb Inc." }, { sembol: "SNOW", isim: "Snowflake Inc." }, { sembol: "PLTR", isim: "Palantir Technologies Inc." }, { sembol: "ROKU", isim: "Roku Inc." }, { sembol: "ZM", isim: "Zoom Video Communications Inc." }, { sembol: "DOCU", isim: "DocuSign Inc." }, { sembol: "SPOT", isim: "Spotify Technology S.A." }, { sembol: "SHOP", isim: "Shopify Inc." }, { sembol: "CRWD", isim: "CrowdStrike Holdings Inc." }, { sembol: "NET", isim: "Cloudflare Inc." }, { sembol: "DDOG", isim: "Datadog Inc." }, { sembol: "TEAM", isim: "Atlassian Corporation" }, { sembol: "OKTA", isim: "Okta Inc." }, { sembol: "ZS", isim: "Zscaler Inc." }, { sembol: "PANW", isim: "Palo Alto Networks Inc." }, { sembol: "FTNT", isim: "Fortinet Inc." }, { sembol: "LMT", isim: "Lockheed Martin Corporation" }, { sembol: "NOC", isim: "Northrop Grumman Corporation" }, { sembol: "GD", isim: "General Dynamics Corporation" }, { sembol: "DE", isim: "Deere & Company" }, { sembol: "WM", isim: "Waste Management Inc." }
     ];
 
     let tmChart = null, lsChart = null, mtChart = null, dcaChart = null;
@@ -578,7 +578,7 @@
       document.getElementById("dca-form").addEventListener("submit", runDCA);
       document.getElementById("reg-password").addEventListener("input", validatePasswordUI);
 
-      // SOBER WEEKEND VALIDATOR
+      // SOBER WEEKEND VALIDATOR (Maddde 3: Yerel Saat Dilimi Sapma Düzeltmesi)
       document.querySelectorAll(".date-validate").forEach(el => {
         el.addEventListener("change", (e) => {
           const input = e.target;
@@ -586,8 +586,15 @@
           const dateVal = input.value;
 
           if (dateVal) {
-            const day = new Date(dateVal).getDay();
-            if (day === 0 || day === 6) {
+            const parts = dateVal.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+            
+            const localDate = new Date(year, month, day);
+            const dayOfWeek = localDate.getDay();
+
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
               if (alertBox) alertBox.style.display = 'block';
               input.style.borderColor = '#B91C1C';
               input.setCustomValidity("Borsa hafta sonları kapalıdır. Lütfen Pazartesi-Cuma arası seçin.");
@@ -605,6 +612,7 @@
       });
     });
 
+    // Madde 1: sectionId -> id Çökme Düzeltmesi
     function showSection(id) {
       document.querySelectorAll(".app-section").forEach(s => s.classList.remove("active"));
       document.getElementById(id).classList.add("active");
@@ -612,7 +620,7 @@
       
       if (id === "time-machine-section") document.getElementById("nav-time-machine").classList.add("active");
       if (id === "lump-sum-section") document.getElementById("nav-lump-sum").classList.add("active");
-      if (sectionId === "market-timing-section") document.getElementById("nav-market-timing").classList.add("active");
+      if (id === "market-timing-section") document.getElementById("nav-market-timing").classList.add("active");
       if (id === "dca-section") document.getElementById("nav-dca").classList.add("active");
       window.scrollTo(0, 0);
     }
@@ -651,6 +659,7 @@
       });
     }
 
+    // Madde 2: Boş Catch Bloklarının Swal Hata Yönetimiyle Doldurulması
     async function handleRegister(e) {
       e.preventDefault();
       try {
@@ -659,7 +668,9 @@
         bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide(); document.getElementById("register-form").reset();
         Swal.fire({ icon: 'success', title: 'Kayıt Başarılı', text: 'Sisteme giriş yapabilirsiniz.', confirmButtonColor: '#1E5AA8' })
           .then(() => new bootstrap.Modal(document.getElementById("loginModal")).show());
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Hata', text: 'Kayıt işlemi gerçekleştirilemedi. Lütfen kurumsal e-posta veya bilgilerinizi kontrol edin.', confirmButtonColor: '#1E5AA8' });
+      }
     }
 
     async function handleLogin(e) {
@@ -670,7 +681,9 @@
         localStorage.setItem("kuantum_token", res.data.token); localStorage.setItem("kuantum_username", res.data.username);
         checkAuth(); bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide(); document.getElementById("login-form").reset();
         Swal.close();
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Oturum Açılamadı', text: 'E-posta veya şifre hatalı.', confirmButtonColor: '#1E5AA8' });
+      }
     }
 
     function regEl(id) { return document.getElementById(id).value; }
@@ -691,9 +704,6 @@
       return { labels: Object.keys(monthly), prices: Object.keys(monthly).map(k => Number((monthly[k].reduce((a,b)=>a+b,0)/monthly[k].length).toFixed(2))) };
     }
 
-    /* ======================================================== */
-    /* SCIENTIFIC PAPER CHART CONFIGURATION (No Gradients) */
-    /* ======================================================== */
     function getAcademicChartConfig(symbol, labelText, processedData, customPointColors = null, customRadii = null) {
       return {
         type: 'line',
@@ -706,7 +716,7 @@
             backgroundColor: 'rgba(30, 90, 168, 0.08)',
             borderWidth: 2,
             fill: true,
-            tension: 0.1, // Sober scientific stiffness
+            tension: 0.1,
             pointBackgroundColor: customPointColors || '#1E5AA8',
             pointRadius: customRadii || (processedData.labels.length > 50 ? 0 : 2)
           }]
@@ -746,7 +756,9 @@
 
         if (tmChart) tmChart.destroy();
         tmChart = new Chart(document.getElementById("timeMachineChart").getContext("2d"), getAcademicChartConfig(symbol, 'Kapanış Fiyatı ($)', processed));
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Hata', text: 'Fiyat verileri API sunucusundan çekilemedi.', confirmButtonColor: '#1E5AA8' });
+      }
     }
 
     // MODÜL 2
@@ -774,7 +786,9 @@
 
         if (lsChart) lsChart.destroy();
         lsChart = new Chart(document.getElementById("lumpSumChart").getContext("2d"), getAcademicChartConfig(symbol, 'Portföy Projeksiyonu ($)', processed, pColors, pRadii));
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Simülasyon Hatası', text: 'Toplu sermaye getiri hesabı başarısız oldu.', confirmButtonColor: '#1E5AA8' });
+      }
     }
 
     // MODÜL 3
@@ -797,7 +811,9 @@
 
         if (mtChart) mtChart.destroy();
         mtChart = new Chart(document.getElementById("marketTimingChart").getContext("2d"), getAcademicChartConfig(symbol, 'Fiyat Sınır Eğrisi', processed, pColors, pRadii));
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Analiz Hatası', text: 'Ekstremum tepe/dip değerleri hesaplanamadı.', confirmButtonColor: '#1E5AA8' });
+      }
     }
 
     // MODÜL 4
@@ -830,7 +846,9 @@
           },
           options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { grid: { color: '#E5E7EB' } }, y: { grid: { color: '#E5E7EB' } } } }
         });
-      } catch (err) {}
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Projeksiyon Hatası', text: 'Periyodik DCA birikim tablosu oluşturulurken teknik bir hata oluştu.', confirmButtonColor: '#1E5AA8' });
+      }
     }
   </script>
 </body>
