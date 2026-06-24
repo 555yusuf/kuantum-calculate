@@ -28,7 +28,7 @@ const getDailyTimeSeries = async (obj) => {
   data.forEach((day) => {
     const dateOnly = day.date.split("T")[0];
 
-    const closePrice = day1adjClose;
+    const closePrice = day.adjClose;
 
     priceData.push({
       tarih: dateOnly,
