@@ -3,12 +3,12 @@ const router = express.Router();
 const { registerUser } = require("../controllers/registerUser.controller");
 const { loginUser } = require("../controllers/loginUser.controller");
 const { updateUser } = require("../controllers/updateUserData.controller");
-const { getAllUser } = require("../controllers/User.controller");
+const { getAllUser } = require("../controllers/user.controller");
 const { getDeleteUser } = require("../controllers/userDelete.controller");
 const { verifyTokenAndAuthorization } = require("../middlewares/verifyToken");
 const {
   getForgetPassword,renderPasswordResetpage,resetPassword
-} = require("../controllers/ressetPassword.controller");
+} = require("../controllers/resetPassword.controller");
 router.get("/", getAllUser);
 
 router.route("/register").post(registerUser);

@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { getDailyTimeSeries } = require("../services/timeMachine.service");
-const { LumbSum } = require("../services/LumbSum.service");
+const { LumpSum } = require("../services/LumpSum.service");
 const { analyzeMarketTiming } = require("../services/marketTiming.service");
 const { calculateDCA } = require("../services/dcaSimulator.service");
 /**
@@ -30,7 +30,7 @@ const fetchHistoricalPrices = asyncHandler(async (req, res) => {
  */
 
 const getNewAmount = asyncHandler(async (req, res) => {
-  const serviceRes = await LumbSum(req.body);
+  const serviceRes = await LumpSum(req.body);
 
   if (serviceRes.error) {
     return res.status(400).json({ message: serviceRes.message });
