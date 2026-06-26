@@ -236,7 +236,8 @@
         <button class="btn-academic btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal"><i class="fa-solid fa-user-plus me-1"></i> Kayıt Ol</button>
       </div>
       <div class="d-none align-items-center gap-3 py-1" id="user-profile">
-        <span class="text-white" style="font-size: 13px;"><i class="fa-solid fa-user-graduate me-1" style="color: #F59E0B;"></i> Kullanıcı: <strong id="username-display"></strong></span>
+        <span class="text-white" style="font-size: 13px;"><i class="fa-solid fa-user-graduate me-1" style="color: #F59E0B;"></i> Araştırmacı: <strong id="username-display"></strong></span>
+        <button class="btn btn-sm btn-outline-light rounded-1" onclick="openUpdateUserModal()" style="font-size: 12px; border-color: rgba(255,255,255,0.4);"><i class="fa-solid fa-pen-to-square me-1"></i>Hesabı Düzenle</button>
         <button class="btn btn-sm btn-danger rounded-1" onclick="logout()" style="font-size: 12px;">Oturumu Kapat</button>
       </div>
     </div>
@@ -517,11 +518,79 @@
         <form id="login-form">
           <div class="modal-body p-4">
             <div class="mb-3"><label class="form-label">E-posta</label><input type="email" class="form-control" id="login-email" required></div>
-            <div class="mb-3"><label class="form-label">Şifre</label><input type="password" class="form-control" id="login-password" required></div>
+            <div class="mb-3">
+              <label class="form-label">Şifre</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="login-password" required>
+                <button class="btn btn-outline-secondary" type="button" id="toggleLoginPwdBtn"
+                  style="border: 1px solid #A1AAA9 !important; background: #fff; color: #555;">
+                  <i class="fa-solid fa-eye" id="toggleLoginPwdIcon"></i>
+                </button>
+              </div>
+              <div class="text-end mt-2">
+                <a href="#" class="text-decoration-none" id="forgot-password-link"
+                  style="font-size: 12px; color: var(--univ-blue); font-family: Georgia, serif;">
+                  <i class="fa-solid fa-key me-1"></i>Şifremi Unuttum?
+                </a>
+              </div>
+            </div>
           </div>
           <div class="modal-footer bg-light border-top-0 justify-content-between">
             <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">Kapat</button>
             <button type="submit" class="btn-academic btn-sm">Giriş Yap</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Şifre Sıfırlama Talep Modalı -->
+  <div class="modal fade" id="passwordResetModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
+        <div class="modal-header bg-light border-bottom-0">
+          <h5 class="serif-heading modal-title fw-bold"><i class="fa-solid fa-envelope-open-text me-2" style="color: var(--univ-blue);"></i>Şifre Sıfırlama</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="password-reset-form">
+          <div class="modal-body p-4">
+            <p style="font-size: 13px; color: #555;">Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı e-postanıza gönderilecektir.</p>
+            <div class="mb-2">
+              <label class="form-label">Kurumsal E-posta</label>
+              <input type="email" class="form-control" id="reset-email" placeholder="ornek@stu.zbeu.edu.tr" required>
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-top-0 justify-content-between">
+            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">İptal</button>
+            <button type="submit" class="btn-academic btn-sm"><i class="fa-solid fa-paper-plane me-1"></i>Sıfırlama Linki Gönder</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kullanıcı Bilgileri Güncelleme Modalı -->
+  <div class="modal fade" id="updateUserModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
+        <div class="modal-header bg-light border-bottom-0">
+          <h5 class="serif-heading modal-title fw-bold"><i class="fa-solid fa-user-pen me-2" style="color: var(--univ-blue);"></i>Hesap Bilgilerini Düzenle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="update-user-form">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label">Kullanıcı Adı</label>
+              <input type="text" class="form-control" id="update-username" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Yaş</label>
+              <input type="number" min="18" class="form-control" id="update-age" required>
+            </div>
+          </div>
+          <div class="modal-footer bg-light border-top-0 justify-content-between">
+            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">İptal</button>
+            <button type="submit" class="btn-academic btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i>Değişiklikleri Kaydet</button>
           </div>
         </form>
       </div>
@@ -576,6 +645,31 @@
       document.getElementById("market-timing-form").addEventListener("submit", runMarketTiming);
       document.getElementById("dca-form").addEventListener("submit", runDCA);
       document.getElementById("reg-password").addEventListener("input", validatePasswordUI);
+      document.getElementById("password-reset-form").addEventListener("submit", handlePasswordReset);
+      document.getElementById("update-user-form").addEventListener("submit", handleUpdateUser);
+
+      // Görev 1: Şifre Göster/Gizle Toggle
+      document.getElementById("toggleLoginPwdBtn").addEventListener("click", function () {
+        const pwdInput = document.getElementById("login-password");
+        const icon = document.getElementById("toggleLoginPwdIcon");
+        if (pwdInput.type === "password") {
+          pwdInput.type = "text";
+          icon.className = "fa-solid fa-eye-slash";
+        } else {
+          pwdInput.type = "password";
+          icon.className = "fa-solid fa-eye";
+        }
+      });
+
+      // Görev 2: Şifremi Unuttum linki -> Login modalı kapat, Reset modalı aç
+      document.getElementById("forgot-password-link").addEventListener("click", function (e) {
+        e.preventDefault();
+        const loginModal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
+        if (loginModal) loginModal.hide();
+        setTimeout(() => {
+          new bootstrap.Modal(document.getElementById("passwordResetModal")).show();
+        }, 400);
+      });
 
       // SOBER WEEKEND VALIDATOR (Maddde 3: Yerel Saat Dilimi Sapma Düzeltmesi)
       document.querySelectorAll(".date-validate").forEach(el => {
@@ -637,6 +731,7 @@
       if (token && username) {
         document.getElementById("auth-buttons").classList.add("d-none");
         document.getElementById("user-profile").classList.remove("d-none");
+        document.getElementById("user-profile").style.display = '';
         document.getElementById("username-display").textContent = username;
       } else {
         document.getElementById("auth-buttons").classList.remove("d-none");
@@ -677,7 +772,10 @@
       try {
         Swal.showLoading();
         const res = await ApiService.login({ email: regEl("login-email"), password: regEl("login-password") });
-        localStorage.setItem("kuantum_token", res.data.token); localStorage.setItem("kuantum_username", res.data.username);
+        localStorage.setItem("kuantum_token", res.data.token);
+        localStorage.setItem("kuantum_username", res.data.username);
+        localStorage.setItem("kuantum_userId", res.data._id);
+        localStorage.setItem("kuantum_age", res.data.age);
         checkAuth(); bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide(); document.getElementById("login-form").reset();
         Swal.close();
       } catch (err) {
@@ -686,6 +784,85 @@
     }
 
     function regEl(id) { return document.getElementById(id).value; }
+
+    // Görev 2: Şifre Sıfırlama Talep Handler
+    async function handlePasswordReset(e) {
+      e.preventDefault();
+      const email = regEl("reset-email");
+      try {
+        Swal.showLoading();
+        await api.post('/api/users/password-reset', { email });
+        bootstrap.Modal.getInstance(document.getElementById("passwordResetModal")).hide();
+        document.getElementById("password-reset-form").reset();
+        Swal.fire({
+          icon: 'success',
+          title: 'Bağlantı Gönderildi!',
+          text: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.',
+          confirmButtonColor: '#1E5AA8'
+        });
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Hata', text: 'Şifre sıfırlama isteği gönderilemedi. E-posta adresinizi kontrol edin.', confirmButtonColor: '#1E5AA8' });
+      }
+    }
+
+    // Görev 3: Hesap Güncelleme Modalını Aç (mevcut verilerle doldur)
+    function openUpdateUserModal() {
+      document.getElementById("update-username").value = localStorage.getItem("kuantum_username") || '';
+      document.getElementById("update-age").value = localStorage.getItem("kuantum_age") || '';
+      new bootstrap.Modal(document.getElementById("updateUserModal")).show();
+    }
+
+    // Görev 3: Hesap Güncelleme Handler
+    async function handleUpdateUser(e) {
+      e.preventDefault();
+      const username = regEl("update-username");
+      const age = Number(regEl("update-age"));
+      const userId = localStorage.getItem("kuantum_userId");
+      const token = localStorage.getItem("kuantum_token");
+
+      if (!userId || !token) {
+        return Swal.fire({ icon: 'warning', title: 'Oturum Bulunamadı', text: 'Lütfen önce giriş yapın.', confirmButtonColor: '#1E5AA8' });
+      }
+
+      try {
+        Swal.showLoading();
+        const response = await fetch(`/api/users/user-update/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token
+          },
+          body: JSON.stringify({ username, age })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || data.error || 'Güncelleme başarısız oldu.');
+        }
+
+        // localStorage güncelle
+        localStorage.setItem("kuantum_username", username);
+        localStorage.setItem("kuantum_age", age);
+        checkAuth();
+
+        bootstrap.Modal.getInstance(document.getElementById("updateUserModal")).hide();
+        document.getElementById("update-user-form").reset();
+        Swal.fire({
+          icon: 'success',
+          title: 'Güncelleme Başarılı!',
+          text: 'Hesap bilgileriniz başarıyla güncellendi.',
+          confirmButtonColor: '#1E5AA8'
+        });
+      } catch (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Güncelleme Hatası',
+          text: err.message || 'Bilgileriniz güncellenirken bir hata oluştu.',
+          confirmButtonColor: '#1E5AA8'
+        });
+      }
+    }
 
     function processChartData(data, diffDays) {
       if (diffDays <= 31) return { labels: data.map(d => d.tarih), prices: data.map(d => d.kapanisFiyati) };
