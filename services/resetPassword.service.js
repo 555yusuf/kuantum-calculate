@@ -20,6 +20,8 @@ const sendForgetPasswordLink = async (obj) => {
 
   // const link = `http://localhost:${process.env.PORT}/api/users/password/reset-password/${user._id}/${token}`;
 
+
+
   const link = `${process.env.PUBLIC_URL}/api/users/password/reset-password/${user._id}/${token}`;
 
   const transporter = nodemailer.createTransport({
@@ -100,7 +102,7 @@ const sendForgetPasswordLink = async (obj) => {
       </div>
 
     </div>`,
-    // text: 'مرحبا، هذه رسالة اختبار عادية جدا بدون روابط',
+    // text: `link : ${link}`,
   };
   try {
     const success = await transporter.sendMail(mailOptions);
