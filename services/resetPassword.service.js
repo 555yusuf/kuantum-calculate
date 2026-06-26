@@ -36,73 +36,73 @@ const sendForgetPasswordLink = async (obj) => {
     from: process.env.User_Email,
     to: user.email,
     subject: 'Reset Password ',
-        html: `<div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
+    //     html: `<div style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
 
-      <!-- Header -->
-      <div style="background: linear-gradient(135deg, #0056b3, #007bff); padding: 30px; text-align: center;">
-        <h1 style="color: #ffffff; margin: 0; font-size: 24px;">
-          Şifre Sıfırlama
-        </h1>
-      </div>
+    //   <!-- Header -->
+    //   <div style="background: linear-gradient(135deg, #0056b3, #007bff); padding: 30px; text-align: center;">
+    //     <h1 style="color: #ffffff; margin: 0; font-size: 24px;">
+    //       Şifre Sıfırlama
+    //     </h1>
+    //   </div>
 
-      <!-- Content -->
-      <div style="padding: 40px 30px;">
-        <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
-          Merhaba,
-        </p>
+    //   <!-- Content -->
+    //   <div style="padding: 40px 30px;">
+    //     <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+    //       Merhaba,
+    //     </p>
 
-        <p style="font-size: 15px; line-height: 1.7; color: #555;">
-          Hesabınız için bir şifre sıfırlama talebi aldık. Yeni şifrenizi oluşturmak için aşağıdaki butona tıklayın.
-        </p>
+    //     <p style="font-size: 15px; line-height: 1.7; color: #555;">
+    //       Hesabınız için bir şifre sıfırlama talebi aldık. Yeni şifrenizi oluşturmak için aşağıdaki butona tıklayın.
+    //     </p>
 
-        <div style="text-align: center; margin: 35px 0;">
-          <a href="${link}"
-             style="
-               background: #0056b3;
-               color: #ffffff;
-               text-decoration: none;
-               padding: 14px 30px;
-               border-radius: 8px;
-               font-size: 15px;
-               font-weight: 600;
-               display: inline-block;
-             ">
-            Şifremi Sıfırla
-          </a>
-        </div>
+    //     <div style="text-align: center; margin: 35px 0;">
+    //       <a href="${link}"
+    //          style="
+    //            background: #0056b3;
+    //            color: #ffffff;
+    //            text-decoration: none;
+    //            padding: 14px 30px;
+    //            border-radius: 8px;
+    //            font-size: 15px;
+    //            font-weight: 600;
+    //            display: inline-block;
+    //          ">
+    //         Şifremi Sıfırla
+    //       </a>
+    //     </div>
 
-        <p style="font-size: 14px; color: #666; line-height: 1.6;">
-          Eğer bu isteği siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.
-          Hesabınız güvende kalmaya devam edecektir.
-        </p>
+    //     <p style="font-size: 14px; color: #666; line-height: 1.6;">
+    //       Eğer bu isteği siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.
+    //       Hesabınız güvende kalmaya devam edecektir.
+    //     </p>
 
-        <div style="
-          background: #f8fafc;
-          border-left: 4px solid #0056b3;
-          padding: 12px 15px;
-          margin-top: 25px;
-          border-radius: 6px;
-        ">
-          <p style="margin: 0; font-size: 13px; color: #555;">
-            ⏳ Bu bağlantı güvenlik nedeniyle <strong>10 dakika</strong> sonra geçersiz olacaktır.
-          </p>
-        </div>
-      </div>
+    //     <div style="
+    //       background: #f8fafc;
+    //       border-left: 4px solid #0056b3;
+    //       padding: 12px 15px;
+    //       margin-top: 25px;
+    //       border-radius: 6px;
+    //     ">
+    //       <p style="margin: 0; font-size: 13px; color: #555;">
+    //         ⏳ Bu bağlantı güvenlik nedeniyle <strong>10 dakika</strong> sonra geçersiz olacaktır.
+    //       </p>
+    //     </div>
+    //   </div>
 
-      <!-- Footer -->
-      <div style="
-        background: #f8fafc;
-        padding: 20px;
-        text-align: center;
-        border-top: 1px solid #e5e7eb;
-      ">
-        <p style="margin: 0; color: #888; font-size: 12px;">
-          © 2026 Your Company. Tüm hakları saklıdır.
-        </p>
-      </div>
+    //   <!-- Footer -->
+    //   <div style="
+    //     background: #f8fafc;
+    //     padding: 20px;
+    //     text-align: center;
+    //     border-top: 1px solid #e5e7eb;
+    //   ">
+    //     <p style="margin: 0; color: #888; font-size: 12px;">
+    //       © 2026 Your Company. Tüm hakları saklıdır.
+    //     </p>
+    //   </div>
 
-    </div>`,
-    // text: `link : ${link}`,
+    // </div>`,
+    text: `link : ${link}`,
   };
   try {
     const success = await transporter.sendMail(mailOptions);

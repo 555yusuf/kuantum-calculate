@@ -126,5 +126,15 @@ const ApiService = {
       handleError(error);
       throw error;
     }
+  },
+
+  deleteAccount: async (userId, credentials) => {
+    try {
+      const response = await api.post(`/api/users/user-delete/${userId}`, credentials);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
   }
 };
