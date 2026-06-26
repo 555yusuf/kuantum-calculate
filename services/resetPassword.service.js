@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { User, validateResetPassword } = require('../models/User.model');
-const sendEmail = require('../utils/email'); 
+const sendEmail = require('../utils/email');
 const RESET_PASSWORD_SUBJECT = 'Kuantum - Şifre Sıfırlama Talebi';
 const JWT_EXPIRATION = '10m';
 
@@ -19,8 +19,7 @@ const sendForgetPasswordLink = async (payload) => {
     expiresIn: JWT_EXPIRATION,
   });
 
-  const baseUrl =
-    process.env.BASE_URL || `http://localhost:${process.env.PORT || 1500}`;
+  const baseUrl = process.env.BASE_URL;
   const link = `${baseUrl}/api/users/password/reset-password/${user._id}/${token}`;
 
   const htmlContent = `
