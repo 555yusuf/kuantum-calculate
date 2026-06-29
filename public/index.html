@@ -1,1098 +1,2289 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KuantumCalculate | Finansal Simülasyon ve Araştırma Laboratuvarı</title>
-  
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  
-  <style>
-    :root {
-      color-scheme: light;
-      --univ-blue: #1E5AA8;
-      --univ-blue-dark: #102A4D;
-      --univ-blue-light: #2E6EBE;
-      --text-dark: #222222;
-      --bg-page: #FFFFFF;
-      --bg-wrapper: #F8F9FA;
-      --border-gray: #D1D5DB;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      KuantumCalculate | Finansal Simülasyon ve Araştırma Laboratuvarı
+    </title>
 
-    body {
-      background-color: var(--bg-page);
-      color: var(--text-dark);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-    }
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-    /* Academic Typography */
-    h1, h2, h3, h4, h5, .serif-heading {
-      font-family: Georgia, 'Times New Roman', Times, serif;
-      font-weight: normal;
-      color: var(--univ-blue-dark);
-    }
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-    /* Top Auxiliary Bar (2012 University Standard) */
-    .top-info-bar {
-      background-color: var(--univ-blue-dark);
-      color: #E5E7EB;
-      font-size: 12px;
-      padding: 6px 0;
-      border-bottom: 2px solid #D97706; /* Traditional Academic Gold Accent */
-    }
-    .top-info-bar a { color: #FFFFFF; text-decoration: none; margin-left: 15px; font-weight: bold; }
-    .top-info-bar a:hover { text-decoration: underline; }
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --univ-blue: #1e5aa8;
+        --univ-blue-dark: #102a4d;
+        --univ-blue-light: #2e6ebe;
+        --text-dark: #222222;
+        --bg-page: #ffffff;
+        --bg-wrapper: #f8f9fa;
+        --border-gray: #d1d5db;
+      }
 
-    /* Main University Header */
-    .university-header {
-      background-color: #FFFFFF;
-      padding: 25px 0;
-      border-bottom: 1px solid var(--border-gray);
-    }
-    
-    .univ-brand-box { display: flex; align-items: center; gap: 18px; text-decoration: none; }
-    .univ-emblem {
-      width: 58px;
-      height: 58px;
-      background-color: var(--univ-blue);
-      color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Georgia, serif;
-      font-size: 26px;
-      font-weight: bold;
-      border: 3px solid var(--univ-blue-dark);
-      box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-    }
-    .univ-title { margin: 0; font-size: 28px; font-weight: bold; letter-spacing: -0.5px; color: var(--univ-blue-dark); }
-    .univ-subtitle { margin: 0; font-size: 13px; color: #555555; text-transform: uppercase; letter-spacing: 1px; }
+      body {
+        background-color: var(--bg-page);
+        color: var(--text-dark);
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
 
-    /* Conservative Navigation Bar */
-    .main-navbar {
-      background-color: var(--univ-blue);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      border-bottom: 1px solid #154078;
-    }
-    .main-navbar .nav-link {
-      color: #FFFFFF !important;
-      font-family: Georgia, serif;
-      font-size: 15px;
-      padding: 12px 20px !important;
-      border-right: 1px solid rgba(255,255,255,0.15);
-      transition: background 0.15s ease;
-    }
-    .main-navbar .nav-item:first-child .nav-link { border-left: 1px solid rgba(255,255,255,0.15); }
-    .main-navbar .nav-link:hover, .main-navbar .nav-link.active {
-      background-color: var(--univ-blue-dark) !important;
-      color: #FFFFFF !important;
-      font-weight: bold;
-    }
+      /* Academic Typography */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      .serif-heading {
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-weight: normal;
+        color: var(--univ-blue-dark);
+      }
 
-    /* Standardized Browser Buttons */
-    .btn-academic {
-      background: linear-gradient(to bottom, #2E6EBE, #1E5AA8);
-      color: #FFFFFF !important;
-      border: 1px solid #102A4D;
-      font-family: Georgia, serif;
-      font-size: 14px;
-      padding: 8px 20px;
-      border-radius: 3px; /* Sober sharp look */
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.15);
-      cursor: pointer;
-      text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
-    }
-    .btn-academic:hover { background: linear-gradient(to bottom, #1E5AA8, #102A4D); }
-    .btn-academic-outline {
-      background: #FFFFFF;
-      color: var(--univ-blue) !important;
-      border: 1px solid var(--univ-blue);
-      font-family: Georgia, serif;
-      font-size: 14px;
-      padding: 8px 18px;
-      border-radius: 3px;
-    }
+      /* Top Auxiliary Bar (2012 University Standard) */
+      .top-info-bar {
+        background-color: var(--univ-blue-dark);
+        color: #e5e7eb;
+        font-size: 12px;
+        padding: 6px 0;
+        border-bottom: 2px solid #d97706; /* Traditional Academic Gold Accent */
+      }
+      .top-info-bar a {
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 15px;
+        font-weight: bold;
+      }
+      .top-info-bar a:hover {
+        text-decoration: underline;
+      }
 
-    /* Structured Institutional Cards */
-    .academic-panel {
-      background: #FFFFFF;
-      border: 1px solid var(--border-gray);
-      border-top: 4px solid var(--univ-blue);
-      border-radius: 0;
-      padding: 25px;
-      margin-bottom: 30px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    
-    .panel-header-gray {
-      background-color: #F1F5F9;
-      padding: 10px 15px;
-      border-bottom: 1px solid var(--border-gray);
-      font-family: Georgia, serif;
-      font-weight: bold;
-      color: var(--univ-blue-dark);
-      margin: -25px -25px 20px -25px;
-    }
+      /* Main University Header */
+      .university-header {
+        background-color: #ffffff;
+        padding: 25px 0;
+        border-bottom: 1px solid var(--border-gray);
+      }
 
-    /* Form Controls */
-    .form-control, .form-select {
-      background-color: #FFFFFF !important;
-      border: 1px solid #A1AAA9 !important;
-      color: #000000 !important;
-      border-radius: 2px;
-      padding: 8px 12px;
-      font-size: 13px;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.07);
-    }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--univ-blue) !important;
-      outline: 0;
-      box-shadow: 0 0 5px rgba(30, 90, 168, 0.3) !important;
-    }
-    .form-label { font-weight: bold; font-size: 12px; color: #333333; margin-bottom: 4px; }
+      .univ-brand-box {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        text-decoration: none;
+      }
+      .univ-emblem {
+        width: 58px;
+        height: 58px;
+        background-color: var(--univ-blue);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Georgia, serif;
+        font-size: 26px;
+        font-weight: bold;
+        border: 3px solid var(--univ-blue-dark);
+        box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+      }
+      .univ-title {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+        color: var(--univ-blue-dark);
+      }
+      .univ-subtitle {
+        margin: 0;
+        font-size: 13px;
+        color: #555555;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
 
-    /* Results Dashboard (Scientific Table Look) */
-    .metric-box {
-      background-color: #F8FAFC;
-      border: 1px solid var(--border-gray);
-      padding: 15px;
-      text-align: center;
-      border-radius: 2px;
-    }
-    .metric-label { font-size: 11px; color: #666666; text-transform: uppercase; font-weight: bold; }
-    .metric-value { font-family: Georgia, serif; font-size: 22px; font-weight: bold; color: var(--univ-blue-dark); margin-top: 5px; }
-    .val-profit { color: #15803D !important; }
-    .val-loss { color: #B91C1C !important; }
+      /* Conservative Navigation Bar */
+      .main-navbar {
+        background-color: var(--univ-blue);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid #154078;
+      }
+      .main-navbar .nav-link {
+        color: #ffffff !important;
+        font-family: Georgia, serif;
+        font-size: 15px;
+        padding: 12px 20px !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
+        transition: background 0.15s ease;
+      }
+      .main-navbar .nav-item:first-child .nav-link {
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .main-navbar .nav-link:hover,
+      .main-navbar .nav-link.active {
+        background-color: var(--univ-blue-dark) !important;
+        color: #ffffff !important;
+        font-weight: bold;
+      }
 
-    /* Weekend Warning Banner */
-    .weekend-alert-box {
-      display: none;
-      background-color: #FEF2F2;
-      border-left: 4px solid #B91C1C;
-      border-top: 1px solid #F87171; border-right: 1px solid #F87171; border-bottom: 1px solid #F87171;
-      padding: 8px 12px;
-      font-size: 12px;
-      color: #991B1B;
-      margin-top: 5px;
-    }
+      /* Standardized Browser Buttons */
+      .btn-academic {
+        background: linear-gradient(to bottom, #2e6ebe, #1e5aa8);
+        color: #ffffff !important;
+        border: 1px solid #102a4d;
+        font-family: Georgia, serif;
+        font-size: 14px;
+        padding: 8px 20px;
+        border-radius: 3px; /* Sober sharp look */
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.3),
+          0 1px 2px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+      }
+      .btn-academic:hover {
+        background: linear-gradient(to bottom, #1e5aa8, #102a4d);
+      }
+      .btn-academic-outline {
+        background: #ffffff;
+        color: var(--univ-blue) !important;
+        border: 1px solid var(--univ-blue);
+        font-family: Georgia, serif;
+        font-size: 14px;
+        padding: 8px 18px;
+        border-radius: 3px;
+      }
 
-    /* Footer */
-    .university-footer {
-      background-color: #1E293B;
-      color: #CBD5E1;
-      padding: 40px 0 20px 0;
-      margin-top: auto;
-      font-size: 13px;
-      border-top: 4px solid var(--univ-blue-dark);
-    }
-    .university-footer h5 { color: #FFFFFF; border-bottom: 1px solid #334155; padding-bottom: 8px; margin-bottom: 15px; font-size: 16px; }
-    .university-footer ul { list-style: none; padding: 0; }
-    .university-footer ul li { margin-bottom: 8px; }
-    .university-footer a { color: #93C5FD; text-decoration: none; }
-    .university-footer a:hover { text-decoration: underline; color: #FFFFFF; }
+      /* Structured Institutional Cards */
+      .academic-panel {
+        background: #ffffff;
+        border: 1px solid var(--border-gray);
+        border-top: 4px solid var(--univ-blue);
+        border-radius: 0;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
 
-    /* Section Visibility */
-    .app-section { display: none; }
-    .app-section.active { display: block; }
-  </style>
-</head>
-<body>
+      .panel-header-gray {
+        background-color: #f1f5f9;
+        padding: 10px 15px;
+        border-bottom: 1px solid var(--border-gray);
+        font-family: Georgia, serif;
+        font-weight: bold;
+        color: var(--univ-blue-dark);
+        margin: -25px -25px 20px -25px;
+      }
 
-  <header class="university-header">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="#" class="univ-brand-box" onclick="showSection('landing-section')">
-        <div class="univ-emblem">QC</div>
-        <div>
-          <h1 class="univ-title">KUANTUM CALCULATE</h1>
-          <p class="univ-subtitle">Ekonomik Katlama & Borsa Analiz Laboratuvarı</p>
-        </div>
-      </a>
-      <div class="d-none d-md-block text-end">
-        <span class="badge bg-success p-2 rounded-1 fw-normal"><i class="fa-solid fa-check-circle me-1"></i> BIST & NASDAQ Veri Akışı Aktif</span>
-      </div>
-    </div>
-  </header>
+      /* Form Controls */
+      .form-control,
+      .form-select {
+        background-color: #ffffff !important;
+        border: 1px solid #a1aaa9 !important;
+        color: #000000 !important;
+        border-radius: 2px;
+        padding: 8px 12px;
+        font-size: 13px;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--univ-blue) !important;
+        outline: 0;
+        box-shadow: 0 0 5px rgba(30, 90, 168, 0.3) !important;
+      }
+      .form-label {
+        font-weight: bold;
+        font-size: 12px;
+        color: #333333;
+        margin-bottom: 4px;
+      }
 
-  <nav class="main-navbar sticky-top">
-    <div class="container d-flex justify-content-between align-items-center">
-      <ul class="nav">
-        <li class="nav-item"><a class="nav-link active" href="#" id="nav-time-machine" onclick="showSection('time-machine-section')">TimeMachine</a></li>
-        <li class="nav-item"><a class="nav-link" href="#" id="nav-lump-sum" onclick="showSection('lump-sum-section')">LumpSum</a></li>
-        <li class="nav-item"><a class="nav-link" href="#" id="nav-market-timing" onclick="showSection('market-timing-section')">Piyasa Zamanlaması</a></li>
-        <li class="nav-item"><a class="nav-link" href="#" id="nav-dca" onclick="showSection('dca-section')">Kuantum DCA</a></li>
-      </ul>
-      <div class="d-flex align-items-center gap-2 py-1" id="auth-buttons">
-        <button class="btn-academic-outline btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal"><i class="fa-solid fa-lock me-1"></i> Kullanıcı Girişi</button>
-        <button class="btn-academic btn-sm" data-bs-toggle="modal" data-bs-target="#registerModal"><i class="fa-solid fa-user-plus me-1"></i> Kayıt Ol</button>
-      </div>
-      <div class="d-none align-items-center gap-3 py-1" id="user-profile">
-        <span class="text-white" style="font-size: 13px;"><i class="fa-solid fa-user-graduate me-1" style="color: #F59E0B;"></i> Araştırmacı: <strong id="username-display"></strong></span>
-        <button class="btn btn-sm btn-outline-light rounded-1" onclick="openUpdateUserModal()" style="font-size: 12px; border-color: rgba(255,255,255,0.4);"><i class="fa-solid fa-pen-to-square me-1"></i>Hesabı Düzenle</button>
-        <button class="btn btn-sm btn-outline-light rounded-1" onclick="openDeleteAccountModal()" style="font-size: 12px; border-color: rgba(220,53,69,0.6); color: #f87171;"><i class="fa-solid fa-trash me-1"></i>Hesabı Sil</button>
-        <button class="btn btn-sm btn-danger rounded-1" onclick="logout()" style="font-size: 12px;">Oturumu Kapat</button>
-      </div>
-    </div>
-  </nav>
+      /* Results Dashboard (Scientific Table Look) */
+      .metric-box {
+        background-color: #f8fafc;
+        border: 1px solid var(--border-gray);
+        padding: 15px;
+        text-align: center;
+        border-radius: 2px;
+      }
+      .metric-label {
+        font-size: 11px;
+        color: #666666;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+      .metric-value {
+        font-family: Georgia, serif;
+        font-size: 22px;
+        font-weight: bold;
+        color: var(--univ-blue-dark);
+        margin-top: 5px;
+      }
+      .val-profit {
+        color: #15803d !important;
+      }
+      .val-loss {
+        color: #b91c1c !important;
+      }
 
-  <main class="app-section active py-5" id="landing-section">
-    <div class="container">
-      
-      <div class="academic-panel" style="background-color: #EDF2F7; border-left: 5px solid var(--univ-blue);">
-        <h2 class="serif-heading mb-3">Hakkımızda: Kuantum Finansal Simülasyon Laboratuvarı</h2>
-        <p style="font-size: 15px; color: #333;">Bu platform, finansal piyasaların geçmiş verilerini ekonometrik modellerle analiz etmek amacıyla geliştirilmiş bağımsız bir Kantitatif Borsa Analiz simülatörüdür. Gerçek zamanlı Tiingo API altyapısını kullanarak tarihsel varlık getirilerini, toplu sermaye projeksiyonlarını (Lump Sum) ve Dolar Maliyet Ortalaması (DCA) stratejilerini yüksek veri hassasiyetiyle test etmenizi sağlar.</p>
-      </div>
+      /* Weekend Warning Banner */
+      .weekend-alert-box {
+        display: none;
+        background-color: #fef2f2;
+        border-left: 4px solid #b91c1c;
+        border-top: 1px solid #f87171;
+        border-right: 1px solid #f87171;
+        border-bottom: 1px solid #f87171;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #991b1b;
+        margin-top: 5px;
+      }
 
-      <h3 class="serif-heading border-bottom pb-2 mb-4">Akademik Araştırma Modülleri</h3>
-      
-      <div class="row g-4">
-        <div class="col-md-6">
-          <div class="academic-panel h-100 mb-0 d-flex flex-column">
-            <h4 class="serif-heading"><i class="fa-solid fa-clock-rotate-left me-2" style="color: var(--univ-blue);"></i> TimeMachine (Tarihsel Fiyat Analizi)</h4>
-            <p class="text-muted" style="font-size: 13px;">Seçilen küresel hisse senetlerinin belirlediğiniz tarih aralıklarındaki günlük kapanış serilerini ve periyot içi tepe/dip dalgalanmalarını ekonometrik grafiklerle inceler.</p>
-            <button class="btn-academic mt-auto align-self-start" onclick="showSection('time-machine-section')">Modülü Çalıştır &rarr;</button>
+      /* Footer */
+      .university-footer {
+        background-color: #1e293b;
+        color: #cbd5e1;
+        padding: 40px 0 20px 0;
+        margin-top: auto;
+        font-size: 13px;
+        border-top: 4px solid var(--univ-blue-dark);
+      }
+      .university-footer h5 {
+        color: #ffffff;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+      .university-footer ul {
+        list-style: none;
+        padding: 0;
+      }
+      .university-footer ul li {
+        margin-bottom: 8px;
+      }
+      .university-footer a {
+        color: #93c5fd;
+        text-decoration: none;
+      }
+      .university-footer a:hover {
+        text-decoration: underline;
+        color: #ffffff;
+      }
+
+      /* Section Visibility */
+      .app-section {
+        display: none;
+      }
+      .app-section.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="university-header">
+      <div class="container d-flex justify-content-between align-items-center">
+        <a
+          href="#"
+          class="univ-brand-box"
+          onclick="showSection('landing-section')"
+        >
+          <div class="univ-emblem">QC</div>
+          <div>
+            <h1 class="univ-title">KUANTUM CALCULATE</h1>
+            <p class="univ-subtitle">
+              Ekonomik Katlama & Borsa Analiz Laboratuvarı
+            </p>
           </div>
-        </div>
-        <div class="col-md-6">
-          <div class="academic-panel h-100 mb-0 d-flex flex-column">
-            <h4 class="serif-heading"><i class="fa-solid fa-scale-balanced me-2" style="color: var(--univ-blue);"></i> LumpSum (Sermaye Getiri Simülasyonu)</h4>
-            <p class="text-muted" style="font-size: 13px;">Belirli bir tarihte yatırılan toplu sermayenin, seçilen varlığın elde tutulma süresi boyunca ürettiği mutlak kâr/zarar ve Yatırım Getirisi (ROI) oranlarını hesaplar.</p>
-            <button class="btn-academic mt-auto align-self-start" onclick="showSection('lump-sum-section')">Modülü Çalıştır &rarr;</button>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="academic-panel h-100 mb-0 d-flex flex-column">
-            <h4 class="serif-heading"><i class="fa-solid fa-chart-line me-2" style="color: var(--univ-blue);"></i> Piyasa Zamanlaması (Market Timing)</h4>
-            <p class="text-muted" style="font-size: 13px;">Verilen periyot içerisindeki mutlak dip (optimal alım) ve mutlak zirve (optimal satış) noktalarını tespit ederek geriye dönük fırsat maliyeti analizi sunar.</p>
-            <button class="btn-academic mt-auto align-self-start" onclick="showSection('market-timing-section')">Modülü Çalıştır &rarr;</button>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="academic-panel h-100 mb-0 d-flex flex-column">
-            <h4 class="serif-heading"><i class="fa-solid fa-coins me-2" style="color: var(--univ-blue);"></i> Kuantum DCA (Aylık Birikim Projeksiyonu)</h4>
-            <p class="text-muted" style="font-size: 13px;">Dolar Maliyet Ortalaması ilkesine göre her ayın ilk işlem gününde yapılan sabit alımların, uzun vadedeki portföy katlama ve birim maliyet düşürme etkisini simüle eder.</p>
-            <button class="btn-academic mt-auto align-self-start" onclick="showSection('dca-section')">Modülü Çalıştır &rarr;</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <section class="app-section py-5" id="time-machine-section">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <div>
-          <h2 class="serif-heading mb-0">TimeMachine: Tarihsel Fiyat Serisi Analizi</h2>
-          <small class="text-muted">Varlıkların zaman içerisindeki ham kapanış serilerini inceleme aracı</small>
-        </div>
-        <button class="btn-academic-outline" onclick="showSection('landing-section')">&larr; Merkeze Dön</button>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="academic-panel">
-            <div class="panel-header-gray">Deney Parametreleri</div>
-            <form id="time-machine-form">
-              <div class="mb-3">
-                <label class="form-label">Hisse Senedi Sembolü</label>
-                <select class="form-select company-select" id="tm-symbol" required></select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Analiz Başlangıç Tarihi</label>
-                <input type="date" class="form-control date-validate" id="tm-sdate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Analiz Bitiş Tarihi</label>
-                <input type="date" class="form-control date-validate" id="tm-edate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <button type="submit" class="btn-academic w-100">Fiyat Serisini Getir</button>
-            </form>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="row g-3 mb-4 d-none" id="time-machine-metrics">
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">İlk Kayıt Fiyatı</div><div class="metric-value" id="tm-first-price">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Son Kayıt Fiyatı</div><div class="metric-value" id="tm-last-price">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Mutlak Değişim</div><div class="metric-value" id="tm-change">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Periyot Zirvesi</div><div class="metric-value" id="tm-peak">0</div></div></div>
-          </div>
-          <div class="academic-panel">
-            <div class="panel-header-gray">Fiyat Seyri Dağılım Grafiği</div>
-            <div style="height: 380px;"><canvas id="timeMachineChart"></canvas></div>
-          </div>
+        </a>
+        <div class="d-none d-md-block text-end">
+          <span class="badge bg-success p-2 rounded-1 fw-normal"
+            ><i class="fa-solid fa-check-circle me-1"></i> BIST & NASDAQ Veri
+            Akışı Aktif</span
+          >
         </div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <section class="app-section py-5" id="lump-sum-section">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <div>
-          <h2 class="serif-heading mb-0">LumpSum: Toplu Sermaye Getiri Simülasyonu</h2>
-          <small class="text-muted">Tek seferlik yatırımların vade sonu nakit akış analizi</small>
+    <nav class="main-navbar sticky-top">
+      <div class="container d-flex justify-content-between align-items-center">
+        <ul class="nav">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              href="#"
+              id="nav-time-machine"
+              onclick="showSection('time-machine-section')"
+              >TimeMachine</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="nav-lump-sum"
+              onclick="showSection('lump-sum-section')"
+              >LumpSum</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="nav-market-timing"
+              onclick="showSection('market-timing-section')"
+              >Piyasa Zamanlaması</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="nav-dca"
+              onclick="showSection('dca-section')"
+              >Kuantum DCA</a
+            >
+          </li>
+        </ul>
+        <div class="d-flex align-items-center gap-2 py-1" id="auth-buttons">
+          <button
+            class="btn-academic-outline btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#loginModal"
+          >
+            <i class="fa-solid fa-lock me-1"></i> Kullanıcı Girişi
+          </button>
+          <button
+            class="btn-academic btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#registerModal"
+          >
+            <i class="fa-solid fa-user-plus me-1"></i> Kayıt Ol
+          </button>
         </div>
-        <button class="btn-academic-outline" onclick="showSection('landing-section')">&larr; Merkeze Dön</button>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="academic-panel">
-            <div class="panel-header-gray">Yatırım Parametreleri</div>
-            <form id="lump-sum-form">
-              <div class="mb-3"><label class="form-label">Hisse Senedi</label><select class="form-select company-select" id="ls-symbol" required></select></div>
-              <div class="mb-3"><label class="form-label">Yatırılan Sermaye ($ / TL)</label><input type="number" min="10" class="form-control" id="ls-amount" placeholder="1000" required></div>
-              <div class="mb-3">
-                <label class="form-label">Alım Tarihi</label>
-                <input type="date" class="form-control date-validate" id="ls-buydate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Satış Tarihi</label>
-                <input type="date" class="form-control date-validate" id="ls-saledate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <button type="submit" class="btn-academic w-100">Simülasyonu Başlat</button>
-            </form>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="row g-3 mb-4 d-none" id="lump-sum-metrics">
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Yatırılan Ana Para</div><div class="metric-value" id="m-invested">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Portföy Güncel Değeri</div><div class="metric-value" id="m-current">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">Net Kâr / Zarar</div><div class="metric-value" id="m-profit">0</div></div></div>
-            <div class="col-md-3"><div class="metric-box"><div class="metric-label">ROI Oranı</div><div class="metric-value" id="m-roi">0%</div></div></div>
-          </div>
-          <div class="academic-panel">
-            <div class="panel-header-gray">Varlık Değeri Büyüme Eğrisi</div>
-            <div style="height: 380px;"><canvas id="lumpSumChart"></canvas></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="app-section py-5" id="market-timing-section">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <div>
-          <h2 class="serif-heading mb-0">Piyasa Zamanlaması: Optimal Alım/Satış Analizi</h2>
-          <small class="text-muted">Periyot içi geriye dönük ekstremum (tepe/dip) tespiti</small>
-        </div>
-        <button class="btn-academic-outline" onclick="showSection('landing-section')">&larr; Merkeze Dön</button>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="academic-panel">
-            <div class="panel-header-gray">Arama Kriterleri</div>
-            <form id="market-timing-form">
-              <div class="mb-3"><label class="form-label">Hisse Senedi</label><select class="form-select company-select" id="mt-symbol" required></select></div>
-              <div class="mb-3">
-                <label class="form-label">Gözlem Başlangıcı</label>
-                <input type="date" class="form-control date-validate" id="mt-sdate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Gözlem Bitişi</label>
-                <input type="date" class="form-control date-validate" id="mt-edate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <button type="submit" class="btn-academic w-100">Ekstremum Değerleri Bul</button>
-            </form>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="row g-3 mb-4 d-none" id="market-timing-metrics">
-            <div class="col-md-6"><div class="metric-box" style="border-top: 3px solid #15803D;"><div class="metric-label">Mutlak Dip (En Ucuz Alım Noktası)</div><div class="metric-value val-profit" id="mt-lowest-val">0</div><small class="text-muted" id="mt-lowest-date">-</small></div></div>
-            <div class="col-md-6"><div class="metric-box" style="border-top: 3px solid #B91C1C;"><div class="metric-label">Mutlak Zirve (En Pahalı Satış Noktası)</div><div class="metric-value val-loss" id="mt-highest-val">0</div><small class="text-muted" id="mt-highest-date">-</small></div></div>
-          </div>
-          <div class="academic-panel">
-            <div class="panel-header-gray">Fiyat Sınırları İşaretleme Grafiği</div>
-            <div style="height: 380px;"><canvas id="marketTimingChart"></canvas></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="app-section py-5" id="dca-section">
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
-        <div>
-          <h2 class="serif-heading mb-0">Kuantum DCA: Periyodik Birikim Projeksiyonu</h2>
-          <small class="text-muted">Aylık sabit alımlarla maliyet ortalaması simülasyonu</small>
-        </div>
-        <button class="btn-academic-outline" onclick="showSection('landing-section')">&larr; Merkeze Dön</button>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="academic-panel">
-            <div class="panel-header-gray">Birikim Planı Ayarları</div>
-            <form id="dca-form">
-              <div class="mb-3"><label class="form-label">Hisse Senedi</label><select class="form-select company-select" id="dca-symbol" required></select></div>
-              <div class="mb-3"><label class="form-label">Aylık Sabit Taksit ($ / TL)</label><input type="number" min="10" class="form-control" id="dca-amount" placeholder="200" required></div>
-              <div class="mb-3">
-                <label class="form-label">Plan Başlangıcı</label>
-                <input type="date" class="form-control date-validate" id="dca-sdate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Plan Bitişi</label>
-                <input type="date" class="form-control date-validate" id="dca-edate" required>
-                <div class="weekend-alert-box">Borsa hafta sonu kapalıdır! Hafta içi seçin.</div>
-              </div>
-              <button type="submit" class="btn-academic w-100">DCA Projeksiyonunu Hesapla</button>
-            </form>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="row g-3 mb-4 d-none" id="dca-metrics">
-            <div class="col-md-4"><div class="metric-box"><div class="metric-label">Toplam Biriken Sermaye</div><div class="metric-value" id="dca-total-invested">0</div><small class="text-muted" id="dca-transactions-count">-</small></div></div>
-            <div class="col-md-4"><div class="metric-box"><div class="metric-label">Portföy Varlık Değeri</div><div class="metric-value" id="dca-portfolio-val">0</div><small class="text-muted" id="dca-shares-owned">-</small></div></div>
-            <div class="col-md-4"><div class="metric-box"><div class="metric-label">Net Getiri & Oran</div><div class="metric-value" id="dca-profit-loss">0</div><small class="text-muted fw-bold mt-1" id="dca-roi-pct">-</small></div></div>
-          </div>
-          <div class="academic-panel">
-            <div class="panel-header-gray">Maliyet vs Portföy Büyüklüğü Karşılaştırması</div>
-            <div style="height: 380px;"><canvas id="dcaChart"></canvas></div>
-          </div>
+        <div class="d-none align-items-center gap-3 py-1" id="user-profile">
+          <span class="text-white" style="font-size: 13px"
+            ><i
+              class="fa-solid fa-user-graduate me-1"
+              style="color: #f59e0b"
+            ></i>
+            Araştırmacı: <strong id="username-display"></strong
+          ></span>
+          <button
+            class="btn btn-sm btn-outline-light rounded-1"
+            onclick="openUpdateUserModal()"
+            style="font-size: 12px; border-color: rgba(255, 255, 255, 0.4)"
+          >
+            <i class="fa-solid fa-pen-to-square me-1"></i>Hesabı Düzenle
+          </button>
+          <button
+            class="btn btn-sm btn-outline-light rounded-1"
+            onclick="openDeleteAccountModal()"
+            style="
+              font-size: 12px;
+              border-color: rgba(220, 53, 69, 0.6);
+              color: #f87171;
+            "
+          >
+            <i class="fa-solid fa-trash me-1"></i>Hesabı Sil
+          </button>
+          <button
+            class="btn btn-sm btn-danger rounded-1"
+            onclick="logout()"
+            style="font-size: 12px"
+          >
+            Oturumu Kapat
+          </button>
         </div>
       </div>
-    </div>
-  </section>
+    </nav>
 
-  <div class="modal fade" id="registerModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        <div class="modal-header bg-light border-bottom-0">
-          <h5 class="serif-heading modal-title fw-bold">Yeni Kullanıcı Kaydı</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <main class="app-section active py-5" id="landing-section">
+      <div class="container">
+        <div
+          class="academic-panel"
+          style="
+            background-color: #edf2f7;
+            border-left: 5px solid var(--univ-blue);
+          "
+        >
+          <h2 class="serif-heading mb-3">
+            Hakkımızda: Kuantum Finansal Simülasyon Laboratuvarı
+          </h2>
+          <p style="font-size: 15px; color: #333">
+            Bu platform, finansal piyasaların geçmiş verilerini ekonometrik
+            modellerle analiz etmek amacıyla geliştirilmiş bağımsız bir
+            Kantitatif Borsa Analiz simülatörüdür. Gerçek zamanlı Tiingo API
+            altyapısını kullanarak tarihsel varlık getirilerini, toplu sermaye
+            projeksiyonlarını (Lump Sum) ve Dolar Maliyet Ortalaması (DCA)
+            stratejilerini yüksek veri hassasiyetiyle test etmenizi sağlar.
+          </p>
         </div>
-        <form id="register-form">
-          <div class="modal-body p-4">
-            <div class="mb-3"><label class="form-label">Kurumsal E-posta</label><input type="email" class="form-control" id="reg-email" required></div>
-            <div class="mb-3"><label class="form-label">Kullanıcı Adı</label><input type="text" class="form-control" id="reg-username" required></div>
-            <div class="mb-3"><label class="form-label">Yaş</label><input type="number" min="18" class="form-control" id="reg-age" required></div>
-            <div class="mb-3">
-              <label class="form-label">Güvenlik Şifresi</label>
-              <input type="password" class="form-control" id="reg-password" required>
-              <div class="p-2 mt-2 bg-light border" style="font-size: 11px;">
-                <div class="text-danger" id="rule-len"><i class="fa-solid fa-xmark me-1"></i> Minimum 8 Karakter</div>
-                <div class="text-danger" id="rule-up"><i class="fa-solid fa-xmark me-1"></i> 1 Büyük Harf</div>
-                <div class="text-danger" id="rule-low"><i class="fa-solid fa-xmark me-1"></i> 1 Küçük Harf</div>
-                <div class="text-danger" id="rule-num"><i class="fa-solid fa-xmark me-1"></i> 1 Rakam</div>
-                <div class="text-danger" id="rule-spec"><i class="fa-solid fa-xmark me-1"></i> 1 Özel Karakter (@$!%*?)</div>
-              </div>
+
+        <h3 class="serif-heading border-bottom pb-2 mb-4">
+          Akademik Araştırma Modülleri
+        </h3>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="academic-panel h-100 mb-0 d-flex flex-column">
+              <h4 class="serif-heading">
+                <i
+                  class="fa-solid fa-clock-rotate-left me-2"
+                  style="color: var(--univ-blue)"
+                ></i>
+                TimeMachine (Tarihsel Fiyat Analizi)
+              </h4>
+              <p class="text-muted" style="font-size: 13px">
+                Seçilen küresel hisse senetlerinin belirlediğiniz tarih
+                aralıklarındaki günlük kapanış serilerini ve periyot içi
+                tepe/dip dalgalanmalarını ekonometrik grafiklerle inceler.
+              </p>
+              <button
+                class="btn-academic mt-auto align-self-start"
+                onclick="showSection('time-machine-section')"
+              >
+                Modülü Çalıştır &rarr;
+              </button>
             </div>
           </div>
-          <div class="modal-footer bg-light border-top-0 justify-content-between">
-            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">İptal</button>
-            <button type="submit" class="btn-academic btn-sm">Kaydı Tamamla</button>
+          <div class="col-md-6">
+            <div class="academic-panel h-100 mb-0 d-flex flex-column">
+              <h4 class="serif-heading">
+                <i
+                  class="fa-solid fa-scale-balanced me-2"
+                  style="color: var(--univ-blue)"
+                ></i>
+                LumpSum (Sermaye Getiri Simülasyonu)
+              </h4>
+              <p class="text-muted" style="font-size: 13px">
+                Belirli bir tarihte yatırılan toplu sermayenin, seçilen varlığın
+                elde tutulma süresi boyunca ürettiği mutlak kâr/zarar ve Yatırım
+                Getirisi (ROI) oranlarını hesaplar.
+              </p>
+              <button
+                class="btn-academic mt-auto align-self-start"
+                onclick="showSection('lump-sum-section')"
+              >
+                Modülü Çalıştır &rarr;
+              </button>
+            </div>
           </div>
-        </form>
-      </div>
-    </div>
-  </div>
 
-  <div class="modal fade" id="loginModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        <div class="modal-header bg-light border-bottom-0">
-          <h5 class="serif-heading modal-title fw-bold">Kullanıcı Oturumu Aç</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <div class="col-md-6">
+            <div class="academic-panel h-100 mb-0 d-flex flex-column">
+              <h4 class="serif-heading">
+                <i
+                  class="fa-solid fa-chart-line me-2"
+                  style="color: var(--univ-blue)"
+                ></i>
+                Piyasa Zamanlaması (Market Timing)
+              </h4>
+              <p class="text-muted" style="font-size: 13px">
+                Verilen periyot içerisindeki mutlak dip (optimal alım) ve mutlak
+                zirve (optimal satış) noktalarını tespit ederek geriye dönük
+                fırsat maliyeti analizi sunar.
+              </p>
+              <button
+                class="btn-academic mt-auto align-self-start"
+                onclick="showSection('market-timing-section')"
+              >
+                Modülü Çalıştır &rarr;
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="academic-panel h-100 mb-0 d-flex flex-column">
+              <h4 class="serif-heading">
+                <i
+                  class="fa-solid fa-coins me-2"
+                  style="color: var(--univ-blue)"
+                ></i>
+                Kuantum DCA (Aylık Birikim Projeksiyonu)
+              </h4>
+              <p class="text-muted" style="font-size: 13px">
+                Dolar Maliyet Ortalaması ilkesine göre her ayın ilk işlem
+                gününde yapılan sabit alımların, uzun vadedeki portföy katlama
+                ve birim maliyet düşürme etkisini simüle eder.
+              </p>
+              <button
+                class="btn-academic mt-auto align-self-start"
+                onclick="showSection('dca-section')"
+              >
+                Modülü Çalıştır &rarr;
+              </button>
+            </div>
+          </div>
         </div>
-        <form id="login-form">
-          <div class="modal-body p-4">
-            <div class="mb-3"><label class="form-label">E-posta</label><input type="email" class="form-control" id="login-email" required></div>
-            <div class="mb-3">
-              <label class="form-label">Şifre</label>
-              <div class="input-group">
-                <input type="password" class="form-control" id="login-password" required>
-                <button class="btn btn-outline-secondary" type="button" id="toggleLoginPwdBtn"
-                  style="border: 1px solid #A1AAA9 !important; background: #fff; color: #555;">
-                  <i class="fa-solid fa-eye" id="toggleLoginPwdIcon"></i>
+      </div>
+    </main>
+
+    <section class="app-section py-5" id="time-machine-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">
+              TimeMachine: Tarihsel Fiyat Serisi Analizi
+            </h2>
+            <small class="text-muted"
+              >Varlıkların zaman içerisindeki ham kapanış serilerini inceleme
+              aracı</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="academic-panel">
+              <div class="panel-header-gray">Deney Parametreleri</div>
+              <form id="time-machine-form">
+                <div class="mb-3">
+                  <label class="form-label">Hisse Senedi Sembolü</label>
+                  <select
+                    class="form-select company-select"
+                    id="tm-symbol"
+                    required
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Analiz Başlangıç Tarihi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="tm-sdate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Analiz Bitiş Tarihi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="tm-edate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <button type="submit" class="btn-academic w-100">
+                  Fiyat Serisini Getir
                 </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row g-3 mb-4 d-none" id="time-machine-metrics">
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">İlk Kayıt Fiyatı</div>
+                  <div class="metric-value" id="tm-first-price">0</div>
+                </div>
               </div>
-              <div class="text-end mt-2">
-                <a href="#" class="text-decoration-none" id="forgot-password-link"
-                  style="font-size: 12px; color: var(--univ-blue); font-family: Georgia, serif;">
-                  <i class="fa-solid fa-key me-1"></i>Şifremi Unuttum?
-                </a>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Son Kayıt Fiyatı</div>
+                  <div class="metric-value" id="tm-last-price">0</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Mutlak Değişim</div>
+                  <div class="metric-value" id="tm-change">0</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Periyot Zirvesi</div>
+                  <div class="metric-value" id="tm-peak">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="academic-panel">
+              <div class="panel-header-gray">Fiyat Seyri Dağılım Grafiği</div>
+              <div style="height: 380px">
+                <canvas id="timeMachineChart"></canvas>
               </div>
             </div>
           </div>
-          <div class="modal-footer bg-light border-top-0 justify-content-between">
-            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">Kapat</button>
-            <button type="submit" class="btn-academic btn-sm">Giriş Yap</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Şifre Sıfırlama Talep Modalı -->
-  <div class="modal fade" id="passwordResetModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        <div class="modal-header bg-light border-bottom-0">
-          <h5 class="serif-heading modal-title fw-bold"><i class="fa-solid fa-envelope-open-text me-2" style="color: var(--univ-blue);"></i>Şifre Sıfırlama</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="password-reset-form">
-          <div class="modal-body p-4">
-            <p style="font-size: 13px; color: #555;">Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı e-postanıza gönderilecektir.</p>
-            <div class="mb-2">
-              <label class="form-label">Kurumsal E-posta</label>
-              <input type="email" class="form-control" id="reset-email" placeholder="ornek@stu.zbeu.edu.tr" required>
-            </div>
-          </div>
-          <div class="modal-footer bg-light border-top-0 justify-content-between">
-            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">İptal</button>
-            <button type="submit" class="btn-academic btn-sm"><i class="fa-solid fa-paper-plane me-1"></i>Sıfırlama Linki Gönder</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Kullanıcı Bilgileri Güncelleme Modalı -->
-  <div class="modal fade" id="updateUserModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        <div class="modal-header bg-light border-bottom-0">
-          <h5 class="serif-heading modal-title fw-bold"><i class="fa-solid fa-user-pen me-2" style="color: var(--univ-blue);"></i>Hesap Bilgilerini Düzenle</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="update-user-form">
-          <div class="modal-body p-4">
-            <div class="mb-3">
-              <label class="form-label">Kullanıcı Adı</label>
-              <input type="text" class="form-control" id="update-username" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Yaş</label>
-              <input type="number" min="18" class="form-control" id="update-age" required>
-            </div>
-          </div>
-          <div class="modal-footer bg-light border-top-0 justify-content-between">
-            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">İptal</button>
-            <button type="submit" class="btn-academic btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i>Değişiklikleri Kaydet</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hesap Silme Onay Modalı -->
-  <div class="modal fade" id="deleteAccountModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content rounded-0 border-0" style="box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-        <div class="modal-header bg-light border-bottom-0">
-          <h5 class="serif-heading modal-title fw-bold"><i class="fa-solid fa-triangle-exclamation me-2" style="color: #B91C1C;"></i>Hesabı Kalıcı Sil</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <form id="delete-account-form">
-          <div class="modal-body p-4">
-            <div class="p-2 mb-3" style="background:#FEF2F2; border-left:4px solid #B91C1C; font-size:13px; color:#991B1B;">
-              <i class="fa-solid fa-circle-exclamation me-1"></i> Bu işlem <strong>geri alınamaz</strong>. Hesabınız ve tüm verileriniz kalıcı olarak silinecektir.
-            </div>
-            <div class="mb-3">
-              <label class="form-label">E-posta Adresiniz</label>
-              <input type="email" class="form-control" id="delete-email" placeholder="Kayıtlı e-postanızı girin" required>
-            </div>
-            <div class="mb-2">
-              <label class="form-label">Şifreniz</label>
-              <input type="password" class="form-control" id="delete-password" placeholder="Şifrenizi girin" required>
-            </div>
-          </div>
-          <div class="modal-footer bg-light border-top-0 justify-content-between">
-            <button type="button" class="btn btn-sm btn-secondary rounded-1" data-bs-dismiss="modal">Vazgeç</button>
-            <button type="submit" class="btn btn-sm btn-danger rounded-1"><i class="fa-solid fa-trash me-1"></i>Hesabı Kalıcı Sil</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <footer class="university-footer">
-    <div class="container">
-      <div class="row g-4 mb-4">
-        <div class="col-md-4">
-          <h5>Finans Laboratuvarı</h5>
-          <p>Zonguldak Bülent Ecevit Üniversitesi Bilgisayar Mühendisliği Bölümü bünyesinde faaliyet gösteren Kantitatif Ekonometri ve Algoritmik Fiyat Serisi Analiz birimi.</p>
-        </div>
-        <div class="col-md-4">
-          <h5>Hızlı Bağlantılar</h5>
-          <ul>
-            <li><a href="#" onclick="showSection('time-machine-section')">TimeMachine Fiyat Serisi</a></li>
-            <li><a href="#" onclick="showSection('lump-sum-section')">LumpSum Sermaye Simülatörü</a></li>
-            <li><a href="#" onclick="showSection('market-timing-section')">Optimal Alım/Satış Analizi</a></li>
-            <li><a href="#" onclick="showSection('dca-section')">Kuantum DCA Algoritması</a></li>
-          </ul>
-        </div>
-        <div class="col-md-4">
-          <h5>Yasal & Akademik Uyarı</h5>
-          <p>Bu portalda sunulan veriler Tiingo API tarafından sağlanmaktadır. Tüm simülasyonlar geriye dönük (Backtest) akademik test amaçlıdır, kesinlikle finansal veya yatırımsal tavsiye niteliği taşımaz.</p>
         </div>
       </div>
+    </section>
+
+    <section class="app-section py-5" id="lump-sum-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">
+              LumpSum: Toplu Sermaye Getiri Simülasyonu
+            </h2>
+            <small class="text-muted"
+              >Tek seferlik yatırımların vade sonu nakit akış analizi</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="academic-panel">
+              <div class="panel-header-gray">Yatırım Parametreleri</div>
+              <form id="lump-sum-form">
+                <div class="mb-3">
+                  <label class="form-label">Hisse Senedi</label
+                  ><select
+                    class="form-select company-select"
+                    id="ls-symbol"
+                    required
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Yatırılan Sermaye ($ / TL)</label
+                  ><input
+                    type="number"
+                    min="10"
+                    class="form-control"
+                    id="ls-amount"
+                    placeholder="1000"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Alım Tarihi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="ls-buydate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Satış Tarihi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="ls-saledate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <button type="submit" class="btn-academic w-100">
+                  Simülasyonu Başlat
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row g-3 mb-4 d-none" id="lump-sum-metrics">
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Yatırılan Ana Para</div>
+                  <div class="metric-value" id="m-invested">0</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Portföy Güncel Değeri</div>
+                  <div class="metric-value" id="m-current">0</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">Net Kâr / Zarar</div>
+                  <div class="metric-value" id="m-profit">0</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="metric-box">
+                  <div class="metric-label">ROI Oranı</div>
+                  <div class="metric-value" id="m-roi">0%</div>
+                </div>
+              </div>
+            </div>
+            <div class="academic-panel">
+              <div class="panel-header-gray">Varlık Değeri Büyüme Eğrisi</div>
+              <div style="height: 380px">
+                <canvas id="lumpSumChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section py-5" id="market-timing-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">
+              Piyasa Zamanlaması: Optimal Alım/Satış Analizi
+            </h2>
+            <small class="text-muted"
+              >Periyot içi geriye dönük ekstremum (tepe/dip) tespiti</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="academic-panel">
+              <div class="panel-header-gray">Arama Kriterleri</div>
+              <form id="market-timing-form">
+                <div class="mb-3">
+                  <label class="form-label">Hisse Senedi</label
+                  ><select
+                    class="form-select company-select"
+                    id="mt-symbol"
+                    required
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Gözlem Başlangıcı</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="mt-sdate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Gözlem Bitişi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="mt-edate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <button type="submit" class="btn-academic w-100">
+                  Ekstremum Değerleri Bul
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row g-3 mb-4 d-none" id="market-timing-metrics">
+              <div class="col-md-6">
+                <div class="metric-box" style="border-top: 3px solid #15803d">
+                  <div class="metric-label">
+                    Mutlak Dip (En Ucuz Alım Noktası)
+                  </div>
+                  <div class="metric-value val-profit" id="mt-lowest-val">
+                    0
+                  </div>
+                  <small class="text-muted" id="mt-lowest-date">-</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="metric-box" style="border-top: 3px solid #b91c1c">
+                  <div class="metric-label">
+                    Mutlak Zirve (En Pahalı Satış Noktası)
+                  </div>
+                  <div class="metric-value val-loss" id="mt-highest-val">0</div>
+                  <small class="text-muted" id="mt-highest-date">-</small>
+                </div>
+              </div>
+            </div>
+            <div class="academic-panel">
+              <div class="panel-header-gray">
+                Fiyat Sınırları İşaretleme Grafiği
+              </div>
+              <div style="height: 380px">
+                <canvas id="marketTimingChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section py-5" id="dca-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">
+              Kuantum DCA: Periyodik Birikim Projeksiyonu
+            </h2>
+            <small class="text-muted"
+              >Aylık sabit alımlarla maliyet ortalaması simülasyonu</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="academic-panel">
+              <div class="panel-header-gray">Birikim Planı Ayarları</div>
+              <form id="dca-form">
+                <div class="mb-3">
+                  <label class="form-label">Hisse Senedi</label
+                  ><select
+                    class="form-select company-select"
+                    id="dca-symbol"
+                    required
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Aylık Sabit Taksit ($ / TL)</label
+                  ><input
+                    type="number"
+                    min="10"
+                    class="form-control"
+                    id="dca-amount"
+                    placeholder="200"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Plan Başlangıcı</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="dca-sdate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Plan Bitişi</label>
+                  <input
+                    type="date"
+                    class="form-control date-validate"
+                    id="dca-edate"
+                    required
+                  />
+                  <div class="weekend-alert-box">
+                    Borsa hafta sonu kapalıdır! Hafta içi seçin.
+                  </div>
+                </div>
+                <button type="submit" class="btn-academic w-100">
+                  DCA Projeksiyonunu Hesapla
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="row g-3 mb-4 d-none" id="dca-metrics">
+              <div class="col-md-4">
+                <div class="metric-box">
+                  <div class="metric-label">Toplam Biriken Sermaye</div>
+                  <div class="metric-value" id="dca-total-invested">0</div>
+                  <small class="text-muted" id="dca-transactions-count"
+                    >-</small
+                  >
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="metric-box">
+                  <div class="metric-label">Portföy Varlık Değeri</div>
+                  <div class="metric-value" id="dca-portfolio-val">0</div>
+                  <small class="text-muted" id="dca-shares-owned">-</small>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="metric-box">
+                  <div class="metric-label">Net Getiri & Oran</div>
+                  <div class="metric-value" id="dca-profit-loss">0</div>
+                  <small class="text-muted fw-bold mt-1" id="dca-roi-pct"
+                    >-</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="academic-panel">
+              <div class="panel-header-gray">
+                Maliyet vs Portföy Büyüklüğü Karşılaştırması
+              </div>
+              <div style="height: 380px"><canvas id="dcaChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="modal fade" id="registerModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content rounded-0 border-0"
+          style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.3)"
+        >
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="serif-heading modal-title fw-bold">
+              Yeni Kullanıcı Kaydı
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="register-form">
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label">Kurumsal E-posta</label
+                ><input
+                  type="email"
+                  class="form-control"
+                  id="reg-email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Kullanıcı Adı</label
+                ><input
+                  type="text"
+                  class="form-control"
+                  id="reg-username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Yaş</label
+                ><input
+                  type="number"
+                  min="18"
+                  class="form-control"
+                  id="reg-age"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Güvenlik Şifresi</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="reg-password"
+                  required
+                />
+                <div class="p-2 mt-2 bg-light border" style="font-size: 11px">
+                  <div class="text-danger" id="rule-len">
+                    <i class="fa-solid fa-xmark me-1"></i> Minimum 8 Karakter
+                  </div>
+                  <div class="text-danger" id="rule-up">
+                    <i class="fa-solid fa-xmark me-1"></i> 1 Büyük Harf
+                  </div>
+                  <div class="text-danger" id="rule-low">
+                    <i class="fa-solid fa-xmark me-1"></i> 1 Küçük Harf
+                  </div>
+                  <div class="text-danger" id="rule-num">
+                    <i class="fa-solid fa-xmark me-1"></i> 1 Rakam
+                  </div>
+                  <div class="text-danger" id="rule-spec">
+                    <i class="fa-solid fa-xmark me-1"></i> 1 Özel Karakter
+                    (@$!%*?)
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="modal-footer bg-light border-top-0 justify-content-between"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary rounded-1"
+                data-bs-dismiss="modal"
+              >
+                İptal
+              </button>
+              <button type="submit" class="btn-academic btn-sm">
+                Kaydı Tamamla
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="api.js"></script>
-  
-  <script>
-    const companyList = [
-      { sembol: "AAPL", isim: "Apple Inc." }, { sembol: "MSFT", isim: "Microsoft Corporation" }, { sembol: "GOOGL", isim: "Alphabet Inc." }, { sembol: "AMZN", isim: "Amazon.com Inc." }, { sembol: "META", isim: "Meta Platforms Inc." }, { sembol: "NVDA", isim: "NVIDIA Corporation" }, { sembol: "TSLA", isim: "Tesla Inc." }, { sembol: "HPQ", isim: "HP Inc." }, { sembol: "JNJ", isim: "Johnson & Johnson" }, { sembol: "V", isim: "Visa Inc." }, { sembol: "WMT", isim: "Walmart Inc." }, { sembol: "JPM", isim: "JPMorgan Chase & Co." }, { sembol: "PG", isim: "The Procter & Gamble Company" }, { sembol: "MA", isim: "Mastercard Incorporated" }, { sembol: "UNH", isim: "UnitedHealth Group Incorporated" }, { sembol: "DIS", isim: "The Walt Disney Company" }, { sembol: "HD", inclin: "The Home Depot Inc." }, { sembol: "BAC", isim: "Bank of America Corporation" }, { sembol: "XOM", isim: "Exxon Mobil Corporation" }, { sembol: "CVX", isim: "Chevron Corporation" }, { sembol: "KO", isim: "The Coca-Cola Company" }, { sembol: "PEP", isim: "PepsiCo Inc." }, { sembol: "COST", isim: "Costco Wholesale Corporation" }, { sembol: "PFE", isim: "Pfizer Inc." }, { sembol: "MRK", isim: "Merck & Co. Inc." }, { sembol: "TMO", isim: "Thermo Fisher Scientific Inc." }, { sembol: "MCD", isim: "McDonald's Corporation" }, { sembol: "CRM", isim: "Salesforce Inc." }, { sembol: "CSCO", isim: "Cisco Systems Inc." }, { sembol: "ABT", isim: "Abbott Laboratories" }, { sembol: "ACN", isim: "Accenture plc" }, { sembol: "NFLX", isim: "Netflix Inc." }, { sembol: "ADBE", isim: "Adobe Inc." }, { sembol: "INTC", isim: "Intel Corporation" }, { sembol: "AMD", isim: "Advanced Micro Devices Inc." }, { sembol: "CMCSA", isim: "Comcast Corporation" }, { sembol: "NKE", isim: "NIKE Inc." }, { sembol: "TXN", isim: "Texas Instruments Incorporated" }, { sembol: "PM", isim: "Philip Morris International Inc." }, { sembol: "LIN", isim: "Linde plc" }, { sembol: "NEE", isim: "NextEra Energy Inc." }, { sembol: "UNP", isim: "Union Pacific Corporation" }, { sembol: "ORCL", isim: "Oracle Corporation" }, { sembol: "WFC", isim: "Wells Fargo & Company" }, { sembol: "QCOM", isim: "QUALCOMM Incorporated" }, { sembol: "HON", isim: "Honeywell International Inc." }, { sembol: "UPS", isim: "United Parcel Service Inc." }, { sembol: "RTX", isim: "RTX Corporation" }, { sembol: "BA", isim: "The Boeing Company" }, { sembol: "IBM", isim: "International Business Machines Corporation" }, { sembol: "LLY", isim: "Eli Lilly and Company" }, { sembol: "SBUX", isim: "Starbucks Corporation" }, { sembol: "GE", isim: "General Electric Company" }, { sembol: "CAT", isim: "Caterpillar Inc." }, { sembol: "GS", isim: "The Goldman Sachs Group Inc." }, { sembol: "MS", isim: "Morgan Stanley" }, { sembol: "BLK", isim: "BlackRock Inc." }, { sembol: "MMM", isim: "3M Company" }, { sembol: "C", isim: "Citigroup Inc." }, { sembol: "AXP", isim: "American Express Company" }, { sembol: "T", isim: "AT&T Inc." }, { sembol: "VZ", isim: "Verizon Communications Inc." }, { sembol: "F", isim: "Ford Motor Company" }, { sembol: "GM", isim: "General Motors Company" }, { sembol: "TGT", isim: "Target Corporation" }, { sembol: "LOW", isim: "Lowe's Companies Inc." }, { sembol: "CVS", isim: "CVS Health Corporation" }, { sembol: "WBA", isim: "Walgreens Boots Alliance Inc." }, { sembol: "BMY", isim: "Bristol-Myers Squibb Company" }, { sembol: "GILD", isim: "Gilead Sciences Inc." }, { sembol: "AMGN", isim: "Amgen Inc." }, { sembol: "ISRG", isim: "Intuitive Surgical Inc." }, { sembol: "MDT", isim: "Medtronic plc" }, { sembol: "SYK", isim: "Stryker Corporation" }, { sembol: "SPGI", isim: "S&P Global Inc." }, { sembol: "INTU", isim: "Intuit Inc." }, { sembol: "NOW", isim: "ServiceNow Inc." }, { sembol: "PYPL", isim: "PayPal Holdings Inc." }, { sembol: "SQ", isim: "Block Inc." }, { sembol: "UBER", isim: "Uber Technologies Inc." }, { sembol: "ABNB", isim: "Airbnb Inc." }, { sembol: "SNOW", isim: "Snowflake Inc." }, { sembol: "PLTR", isim: "Palantir Technologies Inc." }, { sembol: "ROKU", isim: "Roku Inc." }, { sembol: "ZM", isim: "Zoom Video Communications Inc." }, { sembol: "DOCU", isim: "DocuSign Inc." }, { sembol: "SPOT", isim: "Spotify Technology S.A." }, { sembol: "SHOP", isim: "Shopify Inc." }, { sembol: "CRWD", isim: "CrowdStrike Holdings Inc." }, { sembol: "NET", isim: "Cloudflare Inc." }, { sembol: "DDOG", isim: "Datadog Inc." }, { sembol: "TEAM", isim: "Atlassian Corporation" }, { sembol: "OKTA", isim: "Okta Inc." }, { sembol: "ZS", isim: "Zscaler Inc." }, { sembol: "PANW", isim: "Palo Alto Networks Inc." }, { sembol: "FTNT", isim: "Fortinet Inc." }, { sembol: "LMT", isim: "Lockheed Martin Corporation" }, { sembol: "NOC", isim: "Northrop Grumman Corporation" }, { sembol: "GD", isim: "General Dynamics Corporation" }, { sembol: "DE", isim: "Deere & Company" }, { sembol: "WM", isim: "Waste Management Inc." }
-    ];
+    <div class="modal fade" id="loginModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content rounded-0 border-0"
+          style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.3)"
+        >
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="serif-heading modal-title fw-bold">
+              Kullanıcı Oturumu Aç
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="login-form">
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label">E-posta</label
+                ><input
+                  type="email"
+                  class="form-control"
+                  id="login-email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Şifre</label>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="login-password"
+                    required
+                  />
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="toggleLoginPwdBtn"
+                    style="
+                      border: 1px solid #a1aaa9 !important;
+                      background: #fff;
+                      color: #555;
+                    "
+                  >
+                    <i class="fa-solid fa-eye" id="toggleLoginPwdIcon"></i>
+                  </button>
+                </div>
+                <div class="text-end mt-2">
+                  <a
+                    href="#"
+                    class="text-decoration-none"
+                    id="forgot-password-link"
+                    style="
+                      font-size: 12px;
+                      color: var(--univ-blue);
+                      font-family: Georgia, serif;
+                    "
+                  >
+                    <i class="fa-solid fa-key me-1"></i>Şifremi Unuttum?
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div
+              class="modal-footer bg-light border-top-0 justify-content-between"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary rounded-1"
+                data-bs-dismiss="modal"
+              >
+                Kapat
+              </button>
+              <button type="submit" class="btn-academic btn-sm">
+                Giriş Yap
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    let tmChart = null, lsChart = null, mtChart = null, dcaChart = null;
+    <!-- Şifre Sıfırlama Talep Modalı -->
+    <div class="modal fade" id="passwordResetModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div
+          class="modal-content rounded-0 border-0"
+          style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.3)"
+        >
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="serif-heading modal-title fw-bold">
+              <i
+                class="fa-solid fa-envelope-open-text me-2"
+                style="color: var(--univ-blue)"
+              ></i
+              >Şifre Sıfırlama
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="password-reset-form">
+            <div class="modal-body p-4">
+              <p style="font-size: 13px; color: #555">
+                Kayıtlı e-posta adresinizi girin. Şifre sıfırlama bağlantısı
+                e-postanıza gönderilecektir.
+              </p>
+              <div class="mb-2">
+                <label class="form-label">Kurumsal E-posta</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="reset-email"
+                  placeholder="ornek@stu.zbeu.edu.tr"
+                  required
+                />
+              </div>
+            </div>
+            <div
+              class="modal-footer bg-light border-top-0 justify-content-between"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary rounded-1"
+                data-bs-dismiss="modal"
+              >
+                İptal
+              </button>
+              <button type="submit" class="btn-academic btn-sm">
+                <i class="fa-solid fa-paper-plane me-1"></i>Sıfırlama Linki
+                Gönder
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-    document.addEventListener("DOMContentLoaded", () => {
-      populateDropdowns();
-      checkAuth();
+    <!-- Kullanıcı Bilgileri Güncelleme Modalı -->
+    <div class="modal fade" id="updateUserModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div
+          class="modal-content rounded-0 border-0"
+          style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.3)"
+        >
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="serif-heading modal-title fw-bold">
+              <i
+                class="fa-solid fa-user-pen me-2"
+                style="color: var(--univ-blue)"
+              ></i
+              >Hesap Bilgilerini Düzenle
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="update-user-form">
+            <div class="modal-body p-4">
+              <div class="mb-3">
+                <label class="form-label">Kullanıcı Adı</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="update-username"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Yaş</label>
+                <input
+                  type="number"
+                  min="18"
+                  class="form-control"
+                  id="update-age"
+                  required
+                />
+              </div>
+            </div>
+            <div
+              class="modal-footer bg-light border-top-0 justify-content-between"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary rounded-1"
+                data-bs-dismiss="modal"
+              >
+                İptal
+              </button>
+              <button type="submit" class="btn-academic btn-sm">
+                <i class="fa-solid fa-floppy-disk me-1"></i>Değişiklikleri
+                Kaydet
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-      document.getElementById("register-form").addEventListener("submit", handleRegister);
-      document.getElementById("login-form").addEventListener("submit", handleLogin);
-      document.getElementById("time-machine-form").addEventListener("submit", drawTimeMachine);
-      document.getElementById("lump-sum-form").addEventListener("submit", runLumpSum);
-      document.getElementById("market-timing-form").addEventListener("submit", runMarketTiming);
-      document.getElementById("dca-form").addEventListener("submit", runDCA);
-      document.getElementById("reg-password").addEventListener("input", validatePasswordUI);
-      document.getElementById("password-reset-form").addEventListener("submit", handlePasswordReset);
-      document.getElementById("update-user-form").addEventListener("submit", handleUpdateUser);
-      document.getElementById("delete-account-form").addEventListener("submit", handleDeleteAccount);
+    <!-- Hesap Silme Onay Modalı -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div
+          class="modal-content rounded-0 border-0"
+          style="box-shadow: 0 0 20px rgba(0, 0, 0, 0.3)"
+        >
+          <div class="modal-header bg-light border-bottom-0">
+            <h5 class="serif-heading modal-title fw-bold">
+              <i
+                class="fa-solid fa-triangle-exclamation me-2"
+                style="color: #b91c1c"
+              ></i
+              >Hesabı Kalıcı Sil
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="delete-account-form">
+            <div class="modal-body p-4">
+              <div
+                class="p-2 mb-3"
+                style="
+                  background: #fef2f2;
+                  border-left: 4px solid #b91c1c;
+                  font-size: 13px;
+                  color: #991b1b;
+                "
+              >
+                <i class="fa-solid fa-circle-exclamation me-1"></i> Bu işlem
+                <strong>geri alınamaz</strong>. Hesabınız ve tüm verileriniz
+                kalıcı olarak silinecektir.
+              </div>
+              <div class="mb-3">
+                <label class="form-label">E-posta Adresiniz</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="delete-email"
+                  placeholder="Kayıtlı e-postanızı girin"
+                  required
+                />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Şifreniz</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="delete-password"
+                  placeholder="Şifrenizi girin"
+                  required
+                />
+              </div>
+            </div>
+            <div
+              class="modal-footer bg-light border-top-0 justify-content-between"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-secondary rounded-1"
+                data-bs-dismiss="modal"
+              >
+                Vazgeç
+              </button>
+              <button type="submit" class="btn btn-sm btn-danger rounded-1">
+                <i class="fa-solid fa-trash me-1"></i>Hesabı Kalıcı Sil
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-      // Görev 1: Şifre Göster/Gizle Toggle
-      document.getElementById("toggleLoginPwdBtn").addEventListener("click", function () {
-        const pwdInput = document.getElementById("login-password");
-        const icon = document.getElementById("toggleLoginPwdIcon");
-        if (pwdInput.type === "password") {
-          pwdInput.type = "text";
-          icon.className = "fa-solid fa-eye-slash";
-        } else {
-          pwdInput.type = "password";
-          icon.className = "fa-solid fa-eye";
-        }
-      });
+    <footer class="university-footer">
+      <div class="container">
+        <div class="row g-4 mb-4">
+          <div class="col-md-4">
+            <h5>Finans Laboratuvarı</h5>
+            <p>
+              Zonguldak Bülent Ecevit Üniversitesi Bilgisayar Mühendisliği
+              Bölümü bünyesinde faaliyet gösteren Kantitatif Ekonometri ve
+              Algoritmik Fiyat Serisi Analiz birimi.
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h5>Hızlı Bağlantılar</h5>
+            <ul>
+              <li>
+                <a href="#" onclick="showSection('time-machine-section')"
+                  >TimeMachine Fiyat Serisi</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="showSection('lump-sum-section')"
+                  >LumpSum Sermaye Simülatörü</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="showSection('market-timing-section')"
+                  >Optimal Alım/Satış Analizi</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="showSection('dca-section')"
+                  >Kuantum DCA Algoritması</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h5>Yasal & Akademik Uyarı</h5>
+            <p>
+              Bu portalda sunulan veriler Tiingo API tarafından sağlanmaktadır.
+              Tüm simülasyonlar geriye dönük (Backtest) akademik test amaçlıdır,
+              kesinlikle finansal veya yatırımsal tavsiye niteliği taşımaz.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
-      // Görev 2: Şifremi Unuttum linki -> Login modalı kapat, Reset modalı aç
-      document.getElementById("forgot-password-link").addEventListener("click", function (e) {
-        e.preventDefault();
-        const loginModal = bootstrap.Modal.getInstance(document.getElementById("loginModal"));
-        if (loginModal) loginModal.hide();
-        setTimeout(() => {
-          new bootstrap.Modal(document.getElementById("passwordResetModal")).show();
-        }, 400);
-      });
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <script src="api.js"></script>
 
-      // SOBER WEEKEND VALIDATOR (Maddde 3: Yerel Saat Dilimi Sapma Düzeltmesi)
-      document.querySelectorAll(".date-validate").forEach(el => {
-        el.addEventListener("change", (e) => {
-          const input = e.target;
-          const alertBox = input.parentElement.querySelector('.weekend-alert-box');
-          const dateVal = input.value;
+    <script>
+      const companyList = [
+        { sembol: 'AAPL', isim: 'Apple Inc.' },
+        { sembol: 'MSFT', isim: 'Microsoft Corporation' },
+        { sembol: 'GOOGL', isim: 'Alphabet Inc.' },
+        { sembol: 'AMZN', isim: 'Amazon.com Inc.' },
+        { sembol: 'META', isim: 'Meta Platforms Inc.' },
+        { sembol: 'NVDA', isim: 'NVIDIA Corporation' },
+        { sembol: 'TSLA', isim: 'Tesla Inc.' },
+        { sembol: 'HPQ', isim: 'HP Inc.' },
+        { sembol: 'JNJ', isim: 'Johnson & Johnson' },
+        { sembol: 'V', isim: 'Visa Inc.' },
+        { sembol: 'WMT', isim: 'Walmart Inc.' },
+        { sembol: 'JPM', isim: 'JPMorgan Chase & Co.' },
+        { sembol: 'PG', isim: 'The Procter & Gamble Company' },
+        { sembol: 'MA', isim: 'Mastercard Incorporated' },
+        { sembol: 'UNH', isim: 'UnitedHealth Group Incorporated' },
+        { sembol: 'DIS', isim: 'The Walt Disney Company' },
+        { sembol: 'HD', inclin: 'The Home Depot Inc.' },
+        { sembol: 'BAC', isim: 'Bank of America Corporation' },
+        { sembol: 'XOM', isim: 'Exxon Mobil Corporation' },
+        { sembol: 'CVX', isim: 'Chevron Corporation' },
+        { sembol: 'KO', isim: 'The Coca-Cola Company' },
+        { sembol: 'PEP', isim: 'PepsiCo Inc.' },
+        { sembol: 'COST', isim: 'Costco Wholesale Corporation' },
+        { sembol: 'PFE', isim: 'Pfizer Inc.' },
+        { sembol: 'MRK', isim: 'Merck & Co. Inc.' },
+        { sembol: 'TMO', isim: 'Thermo Fisher Scientific Inc.' },
+        { sembol: 'MCD', isim: "McDonald's Corporation" },
+        { sembol: 'CRM', isim: 'Salesforce Inc.' },
+        { sembol: 'CSCO', isim: 'Cisco Systems Inc.' },
+        { sembol: 'ABT', isim: 'Abbott Laboratories' },
+        { sembol: 'ACN', isim: 'Accenture plc' },
+        { sembol: 'NFLX', isim: 'Netflix Inc.' },
+        { sembol: 'ADBE', isim: 'Adobe Inc.' },
+        { sembol: 'INTC', isim: 'Intel Corporation' },
+        { sembol: 'AMD', isim: 'Advanced Micro Devices Inc.' },
+        { sembol: 'CMCSA', isim: 'Comcast Corporation' },
+        { sembol: 'NKE', isim: 'NIKE Inc.' },
+        { sembol: 'TXN', isim: 'Texas Instruments Incorporated' },
+        { sembol: 'PM', isim: 'Philip Morris International Inc.' },
+        { sembol: 'LIN', isim: 'Linde plc' },
+        { sembol: 'NEE', isim: 'NextEra Energy Inc.' },
+        { sembol: 'UNP', isim: 'Union Pacific Corporation' },
+        { sembol: 'ORCL', isim: 'Oracle Corporation' },
+        { sembol: 'WFC', isim: 'Wells Fargo & Company' },
+        { sembol: 'QCOM', isim: 'QUALCOMM Incorporated' },
+        { sembol: 'HON', isim: 'Honeywell International Inc.' },
+        { sembol: 'UPS', isim: 'United Parcel Service Inc.' },
+        { sembol: 'RTX', isim: 'RTX Corporation' },
+        { sembol: 'BA', isim: 'The Boeing Company' },
+        { sembol: 'IBM', isim: 'International Business Machines Corporation' },
+        { sembol: 'LLY', isim: 'Eli Lilly and Company' },
+        { sembol: 'SBUX', isim: 'Starbucks Corporation' },
+        { sembol: 'GE', isim: 'General Electric Company' },
+        { sembol: 'CAT', isim: 'Caterpillar Inc.' },
+        { sembol: 'GS', isim: 'The Goldman Sachs Group Inc.' },
+        { sembol: 'MS', isim: 'Morgan Stanley' },
+        { sembol: 'BLK', isim: 'BlackRock Inc.' },
+        { sembol: 'MMM', isim: '3M Company' },
+        { sembol: 'C', isim: 'Citigroup Inc.' },
+        { sembol: 'AXP', isim: 'American Express Company' },
+        { sembol: 'T', isim: 'AT&T Inc.' },
+        { sembol: 'VZ', isim: 'Verizon Communications Inc.' },
+        { sembol: 'F', isim: 'Ford Motor Company' },
+        { sembol: 'GM', isim: 'General Motors Company' },
+        { sembol: 'TGT', isim: 'Target Corporation' },
+        { sembol: 'LOW', isim: "Lowe's Companies Inc." },
+        { sembol: 'CVS', isim: 'CVS Health Corporation' },
+        { sembol: 'WBA', isim: 'Walgreens Boots Alliance Inc.' },
+        { sembol: 'BMY', isim: 'Bristol-Myers Squibb Company' },
+        { sembol: 'GILD', isim: 'Gilead Sciences Inc.' },
+        { sembol: 'AMGN', isim: 'Amgen Inc.' },
+        { sembol: 'ISRG', isim: 'Intuitive Surgical Inc.' },
+        { sembol: 'MDT', isim: 'Medtronic plc' },
+        { sembol: 'SYK', isim: 'Stryker Corporation' },
+        { sembol: 'SPGI', isim: 'S&P Global Inc.' },
+        { sembol: 'INTU', isim: 'Intuit Inc.' },
+        { sembol: 'NOW', isim: 'ServiceNow Inc.' },
+        { sembol: 'PYPL', isim: 'PayPal Holdings Inc.' },
+        { sembol: 'SQ', isim: 'Block Inc.' },
+        { sembol: 'UBER', isim: 'Uber Technologies Inc.' },
+        { sembol: 'ABNB', isim: 'Airbnb Inc.' },
+        { sembol: 'SNOW', isim: 'Snowflake Inc.' },
+        { sembol: 'PLTR', isim: 'Palantir Technologies Inc.' },
+        { sembol: 'ROKU', isim: 'Roku Inc.' },
+        { sembol: 'ZM', isim: 'Zoom Video Communications Inc.' },
+        { sembol: 'DOCU', isim: 'DocuSign Inc.' },
+        { sembol: 'SPOT', isim: 'Spotify Technology S.A.' },
+        { sembol: 'SHOP', isim: 'Shopify Inc.' },
+        { sembol: 'CRWD', isim: 'CrowdStrike Holdings Inc.' },
+        { sembol: 'NET', isim: 'Cloudflare Inc.' },
+        { sembol: 'DDOG', isim: 'Datadog Inc.' },
+        { sembol: 'TEAM', isim: 'Atlassian Corporation' },
+        { sembol: 'OKTA', isim: 'Okta Inc.' },
+        { sembol: 'ZS', isim: 'Zscaler Inc.' },
+        { sembol: 'PANW', isim: 'Palo Alto Networks Inc.' },
+        { sembol: 'FTNT', isim: 'Fortinet Inc.' },
+        { sembol: 'LMT', isim: 'Lockheed Martin Corporation' },
+        { sembol: 'NOC', isim: 'Northrop Grumman Corporation' },
+        { sembol: 'GD', isim: 'General Dynamics Corporation' },
+        { sembol: 'DE', isim: 'Deere & Company' },
+        { sembol: 'WM', isim: 'Waste Management Inc.' },
+      ];
 
-          if (dateVal) {
-            const parts = dateVal.split('-');
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10) - 1;
-            const day = parseInt(parts[2], 10);
-            
-            const localDate = new Date(year, month, day);
-            const dayOfWeek = localDate.getDay();
+      let tmChart = null,
+        lsChart = null,
+        mtChart = null,
+        dcaChart = null;
 
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-              if (alertBox) alertBox.style.display = 'block';
-              input.style.borderColor = '#B91C1C';
-              input.setCustomValidity("Borsa hafta sonları kapalıdır. Lütfen Pazartesi-Cuma arası seçin.");
+      document.addEventListener('DOMContentLoaded', () => {
+        populateDropdowns();
+        checkAuth();
+
+        document
+          .getElementById('register-form')
+          .addEventListener('submit', handleRegister);
+        document
+          .getElementById('login-form')
+          .addEventListener('submit', handleLogin);
+        document
+          .getElementById('time-machine-form')
+          .addEventListener('submit', drawTimeMachine);
+        document
+          .getElementById('lump-sum-form')
+          .addEventListener('submit', runLumpSum);
+        document
+          .getElementById('market-timing-form')
+          .addEventListener('submit', runMarketTiming);
+        document.getElementById('dca-form').addEventListener('submit', runDCA);
+        document
+          .getElementById('reg-password')
+          .addEventListener('input', validatePasswordUI);
+        document
+          .getElementById('password-reset-form')
+          .addEventListener('submit', handlePasswordReset);
+        document
+          .getElementById('update-user-form')
+          .addEventListener('submit', handleUpdateUser);
+        document
+          .getElementById('delete-account-form')
+          .addEventListener('submit', handleDeleteAccount);
+
+        // Görev 1: Şifre Göster/Gizle Toggle
+        document
+          .getElementById('toggleLoginPwdBtn')
+          .addEventListener('click', function () {
+            const pwdInput = document.getElementById('login-password');
+            const icon = document.getElementById('toggleLoginPwdIcon');
+            if (pwdInput.type === 'password') {
+              pwdInput.type = 'text';
+              icon.className = 'fa-solid fa-eye-slash';
+            } else {
+              pwdInput.type = 'password';
+              icon.className = 'fa-solid fa-eye';
+            }
+          });
+
+        // Görev 2: Şifremi Unuttum linki -> Login modalı kapat, Reset modalı aç
+        document
+          .getElementById('forgot-password-link')
+          .addEventListener('click', function (e) {
+            e.preventDefault();
+            const loginModal = bootstrap.Modal.getInstance(
+              document.getElementById('loginModal')
+            );
+            if (loginModal) loginModal.hide();
+            setTimeout(() => {
+              new bootstrap.Modal(
+                document.getElementById('passwordResetModal')
+              ).show();
+            }, 400);
+          });
+
+        // SOBER WEEKEND VALIDATOR (Maddde 3: Yerel Saat Dilimi Sapma Düzeltmesi)
+        document.querySelectorAll('.date-validate').forEach((el) => {
+          el.addEventListener('change', (e) => {
+            const input = e.target;
+            const alertBox =
+              input.parentElement.querySelector('.weekend-alert-box');
+            const dateVal = input.value;
+
+            if (dateVal) {
+              const parts = dateVal.split('-');
+              const year = parseInt(parts[0], 10);
+              const month = parseInt(parts[1], 10) - 1;
+              const day = parseInt(parts[2], 10);
+
+              const localDate = new Date(year, month, day);
+              const dayOfWeek = localDate.getDay();
+
+              if (dayOfWeek === 0 || dayOfWeek === 6) {
+                if (alertBox) alertBox.style.display = 'block';
+                input.style.borderColor = '#B91C1C';
+                input.setCustomValidity(
+                  'Borsa hafta sonları kapalıdır. Lütfen Pazartesi-Cuma arası seçin.'
+                );
+              } else {
+                if (alertBox) alertBox.style.display = 'none';
+                input.style.borderColor = '#A1AAA9';
+                input.setCustomValidity('');
+              }
             } else {
               if (alertBox) alertBox.style.display = 'none';
               input.style.borderColor = '#A1AAA9';
-              input.setCustomValidity("");
+              input.setCustomValidity('');
             }
-          } else {
-            if (alertBox) alertBox.style.display = 'none';
-            input.style.borderColor = '#A1AAA9';
-            input.setCustomValidity("");
-          }
+          });
         });
       });
-    });
 
-    // Madde 1: sectionId -> id Çökme Düzeltmesi
-    function showSection(id) {
-      document.querySelectorAll(".app-section").forEach(s => s.classList.remove("active"));
-      document.getElementById(id).classList.add("active");
-      document.querySelectorAll(".main-navbar .nav-link").forEach(l => l.classList.remove("active"));
-      
-      if (id === "time-machine-section") document.getElementById("nav-time-machine").classList.add("active");
-      if (id === "lump-sum-section") document.getElementById("nav-lump-sum").classList.add("active");
-      if (id === "market-timing-section") document.getElementById("nav-market-timing").classList.add("active");
-      if (id === "dca-section") document.getElementById("nav-dca").classList.add("active");
-      window.scrollTo(0, 0);
-    }
+      // Madde 1: sectionId -> id Çökme Düzeltmesi
+      function showSection(id) {
+        document
+          .querySelectorAll('.app-section')
+          .forEach((s) => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document
+          .querySelectorAll('.main-navbar .nav-link')
+          .forEach((l) => l.classList.remove('active'));
 
-    function populateDropdowns() {
-      document.querySelectorAll(".company-select").forEach(select => {
-        select.innerHTML = '<option value="" disabled selected>Hisse Senedi Seçiniz...</option>';
-        companyList.forEach(c => { select.innerHTML += `<option value="${c.sembol}">${c.sembol} - ${c.isim}</option>`; });
-      });
-    }
-
-    function checkAuth() {
-      const token = localStorage.getItem("kuantum_token");
-      const username = localStorage.getItem("kuantum_username");
-      if (token && username) {
-        document.getElementById("auth-buttons").classList.add("d-none");
-        document.getElementById("user-profile").classList.remove("d-none");
-        document.getElementById("user-profile").style.display = '';
-        document.getElementById("username-display").textContent = username;
-      } else {
-        document.getElementById("auth-buttons").classList.remove("d-none");
-        document.getElementById("user-profile").classList.add("d-none");
+        if (id === 'time-machine-section')
+          document.getElementById('nav-time-machine').classList.add('active');
+        if (id === 'lump-sum-section')
+          document.getElementById('nav-lump-sum').classList.add('active');
+        if (id === 'market-timing-section')
+          document.getElementById('nav-market-timing').classList.add('active');
+        if (id === 'dca-section')
+          document.getElementById('nav-dca').classList.add('active');
+        window.scrollTo(0, 0);
       }
-    }
 
-    function logout() {
-      localStorage.clear(); checkAuth(); showSection("landing-section");
-    }
+      function populateDropdowns() {
+        document.querySelectorAll('.company-select').forEach((select) => {
+          select.innerHTML =
+            '<option value="" disabled selected>Hisse Senedi Seçiniz...</option>';
+          companyList.forEach((c) => {
+            select.innerHTML += `<option value="${c.sembol}">${c.sembol} - ${c.isim}</option>`;
+          });
 
-    function validatePasswordUI(e) {
-      const val = e.target.value;
-      const rules = { len: val.length >= 8, up: /[A-Z]/.test(val), low: /[a-z]/.test(val), num: /[0-9]/.test(val), spec: /[@$!%*?&]/.test(val) };
-      Object.keys(rules).forEach(k => {
-        const el = document.getElementById(`rule-${k}`);
-        if (rules[k]) { el.className = "text-success fw-bold"; el.querySelector("i").className = "fa-solid fa-check me-1"; } 
-        else { el.className = "text-danger"; el.querySelector("i").className = "fa-solid fa-xmark me-1"; }
-      });
-    }
-
-    // Madde 2: Boş Catch Bloklarının Swal Hata Yönetimiyle Doldurulması
-    async function handleRegister(e) {
-      e.preventDefault();
-      try {
-        Swal.showLoading();
-        await ApiService.register({ email: regEl("reg-email"), username: regEl("reg-username"), age: regEl("reg-age"), password: regEl("reg-password") });
-        bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide(); document.getElementById("register-form").reset();
-        Swal.fire({ icon: 'success', title: 'Kayıt Başarılı', text: 'Sisteme giriş yapabilirsiniz.', confirmButtonColor: '#1E5AA8' })
-          .then(() => new bootstrap.Modal(document.getElementById("loginModal")).show());
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Hata', text: 'Kayıt işlemi gerçekleştirilemedi. Lütfen kurumsal e-posta veya bilgilerinizi kontrol edin.', confirmButtonColor: '#1E5AA8' });
-      }
-    }
-
-    async function handleLogin(e) {
-      e.preventDefault();
-      try {
-        Swal.showLoading();
-        const res = await ApiService.login({ email: regEl("login-email"), password: regEl("login-password") });
-        localStorage.setItem("kuantum_token", res.data.token);
-        localStorage.setItem("kuantum_username", res.data.username);
-        localStorage.setItem("kuantum_userId", res.data._id);
-        localStorage.setItem("kuantum_age", res.data.age);
-        checkAuth(); bootstrap.Modal.getInstance(document.getElementById("loginModal")).hide(); document.getElementById("login-form").reset();
-        Swal.close();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Oturum Açılamadı', text: 'E-posta veya şifre hatalı.', confirmButtonColor: '#1E5AA8' });
-      }
-    }
-
-    function regEl(id) { return document.getElementById(id).value; }
-
-    // Görev 2: Şifre Sıfırlama Talep Handler
-    async function handlePasswordReset(e) {
-      e.preventDefault();
-      const email = regEl("reset-email");
-      try {
-        Swal.showLoading();
-        await api.post('/api/users/password-reset', { email });
-        bootstrap.Modal.getInstance(document.getElementById("passwordResetModal")).hide();
-        document.getElementById("password-reset-form").reset();
-        Swal.fire({
-          icon: 'success',
-          title: 'Bağlantı Gönderildi!',
-          text: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.',
-          confirmButtonColor: '#1E5AA8'
+          new TomSelect(select, {
+            create: false,
+            sortField: { field: 'text', direction: 'asc' },
+            placeholder: 'Hisse Senedi Ara...',
+            maxOptions: null,
+          });
         });
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Hata', text: 'Şifre sıfırlama isteği gönderilemedi. E-posta adresinizi kontrol edin.', confirmButtonColor: '#1E5AA8' });
-      }
-    }
-
-    // Görev 3: Hesap Güncelleme Modalını Aç (mevcut verilerle doldur)
-    function openUpdateUserModal() {
-      document.getElementById("update-username").value = localStorage.getItem("kuantum_username") || '';
-      document.getElementById("update-age").value = localStorage.getItem("kuantum_age") || '';
-      new bootstrap.Modal(document.getElementById("updateUserModal")).show();
-    }
-
-    function openDeleteAccountModal() {
-      document.getElementById("delete-account-form").reset();
-      new bootstrap.Modal(document.getElementById("deleteAccountModal")).show();
-    }
-
-    async function handleDeleteAccount(e) {
-      e.preventDefault();
-      const userId = localStorage.getItem("kuantum_userId");
-      const token  = localStorage.getItem("kuantum_token");
-
-      if (!userId || !token) {
-        return Swal.fire({ icon: "warning", title: "Oturum Bulunamadı", text: "Lütfen önce giriş yapın.", confirmButtonColor: "#1E5AA8" });
       }
 
-      const email    = document.getElementById("delete-email").value;
-      const password = document.getElementById("delete-password").value;
+      function checkAuth() {
+        const token = localStorage.getItem('kuantum_token');
+        const username = localStorage.getItem('kuantum_username');
+        if (token && username) {
+          document.getElementById('auth-buttons').classList.add('d-none');
+          document.getElementById('user-profile').classList.remove('d-none');
+          document.getElementById('user-profile').style.display = '';
+          document.getElementById('username-display').textContent = username;
+        } else {
+          document.getElementById('auth-buttons').classList.remove('d-none');
+          document.getElementById('user-profile').classList.add('d-none');
+        }
+      }
 
-      try {
-        Swal.showLoading();
-        await ApiService.deleteAccount(userId, { email, password });
-
-        bootstrap.Modal.getInstance(document.getElementById("deleteAccountModal")).hide();
-        document.getElementById("delete-account-form").reset();
-
+      function logout() {
         localStorage.clear();
         checkAuth();
-        showSection("landing-section");
-
-        Swal.fire({ icon: "success", title: "Hesap Silindi", text: "Hesabınız başarıyla silindi. Görüşmek üzere!", confirmButtonColor: "#1E5AA8" });
-      } catch (err) {
-        Swal.fire({ icon: "error", title: "Silme İşlemi Başarısız", text: "E-posta veya şifre hatalı olabilir. Lütfen kontrol edin.", confirmButtonColor: "#1E5AA8" });
-      }
-    }
-
-    // Görev 3: Hesap Güncelleme Handler
-    async function handleUpdateUser(e) {
-      e.preventDefault();
-      const username = regEl("update-username");
-      const age = Number(regEl("update-age"));
-      const userId = localStorage.getItem("kuantum_userId");
-      const token = localStorage.getItem("kuantum_token");
-
-      if (!userId || !token) {
-        return Swal.fire({ icon: 'warning', title: 'Oturum Bulunamadı', text: 'Lütfen önce giriş yapın.', confirmButtonColor: '#1E5AA8' });
+        showSection('landing-section');
       }
 
-      try {
-        Swal.showLoading();
-        const response = await fetch(`/api/users/user-update/${userId}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'token': token
-          },
-          body: JSON.stringify({ username, age })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || data.error || 'Güncelleme başarısız oldu.');
-        }
-
-        // localStorage güncelle
-        localStorage.setItem("kuantum_username", username);
-        localStorage.setItem("kuantum_age", age);
-        checkAuth();
-
-        bootstrap.Modal.getInstance(document.getElementById("updateUserModal")).hide();
-        document.getElementById("update-user-form").reset();
-        Swal.fire({
-          icon: 'success',
-          title: 'Güncelleme Başarılı!',
-          text: 'Hesap bilgileriniz başarıyla güncellendi.',
-          confirmButtonColor: '#1E5AA8'
-        });
-      } catch (err) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Güncelleme Hatası',
-          text: err.message || 'Bilgileriniz güncellenirken bir hata oluştu.',
-          confirmButtonColor: '#1E5AA8'
-        });
-      }
-    }
-
-    function processChartData(data, diffDays) {
-      if (diffDays <= 31) return { labels: data.map(d => d.tarih), prices: data.map(d => d.kapanisFiyati) };
-      if (diffDays <= 365) {
-        const labels = [], prices = [];
-        for (let i = 0; i < data.length; i += 7) { labels.push(data[i].tarih); prices.push(data[i].kapanisFiyati); }
-        return { labels, prices };
-      }
-      const monthly = {};
-      data.forEach(item => {
-        const m = item.tarih.substring(0, 7);
-        if (!monthly[m]) monthly[m] = [];
-        monthly[m].push(item.kapanisFiyati);
-      });
-      return { labels: Object.keys(monthly), prices: Object.keys(monthly).map(k => Number((monthly[k].reduce((a,b)=>a+b,0)/monthly[k].length).toFixed(2))) };
-    }
-
-    function getAcademicChartConfig(symbol, labelText, processedData, customPointColors = null, customRadii = null) {
-      return {
-        type: 'line',
-        data: {
-          labels: processedData.labels,
-          datasets: [{
-            label: `${symbol} - ${labelText}`,
-            data: processedData.prices,
-            borderColor: '#1E5AA8',
-            backgroundColor: 'rgba(30, 90, 168, 0.08)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.1,
-            pointBackgroundColor: customPointColors || '#1E5AA8',
-            pointRadius: customRadii || (processedData.labels.length > 50 ? 0 : 2)
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
-          plugins: { legend: { labels: { font: { family: 'Georgia, serif', size: 13 }, color: '#102A4D' } } },
-          scales: {
-            x: { grid: { color: '#E5E7EB' }, ticks: { color: '#4B5563', font: { size: 11 } } },
-            y: { grid: { color: '#E5E7EB' }, ticks: { color: '#4B5563', font: { size: 11 } } }
+      function validatePasswordUI(e) {
+        const val = e.target.value;
+        const rules = {
+          len: val.length >= 8,
+          up: /[A-Z]/.test(val),
+          low: /[a-z]/.test(val),
+          num: /[0-9]/.test(val),
+          spec: /[@$!%*?&]/.test(val),
+        };
+        Object.keys(rules).forEach((k) => {
+          const el = document.getElementById(`rule-${k}`);
+          if (rules[k]) {
+            el.className = 'text-success fw-bold';
+            el.querySelector('i').className = 'fa-solid fa-check me-1';
+          } else {
+            el.className = 'text-danger';
+            el.querySelector('i').className = 'fa-solid fa-xmark me-1';
           }
+        });
+      }
+
+      // Madde 2: Boş Catch Bloklarının Swal Hata Yönetimiyle Doldurulması
+      async function handleRegister(e) {
+        e.preventDefault();
+        try {
+          Swal.showLoading();
+          await ApiService.register({
+            email: regEl('reg-email'),
+            username: regEl('reg-username'),
+            age: regEl('reg-age'),
+            password: regEl('reg-password'),
+          });
+          bootstrap.Modal.getInstance(
+            document.getElementById('registerModal')
+          ).hide();
+          document.getElementById('register-form').reset();
+          Swal.fire({
+            icon: 'success',
+            title: 'Kayıt Başarılı',
+            text: 'Sisteme giriş yapabilirsiniz.',
+            confirmButtonColor: '#1E5AA8',
+          }).then(() =>
+            new bootstrap.Modal(document.getElementById('loginModal')).show()
+          );
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hata',
+            text: 'Kayıt işlemi gerçekleştirilemedi. Lütfen kurumsal e-posta veya bilgilerinizi kontrol edin.',
+            confirmButtonColor: '#1E5AA8',
+          });
         }
-      };
-    }
-
-    // MODÜL 1
-    async function drawTimeMachine(e) {
-      e.preventDefault();
-      const symbol = regEl("tm-symbol"), sDate = regEl("tm-sdate"), eDate = regEl("tm-edate");
-      const diffDays = Math.ceil((new Date(eDate) - new Date(sDate)) / (1000 * 60 * 60 * 24));
-      if (diffDays <= 0) return;
-
-      try {
-        Swal.showLoading(); const priceData = await ApiService.getPrices({ sDate, eDate, symbol }); Swal.close();
-        if (!priceData || priceData.length === 0) return Swal.fire({ icon: 'info', title: 'Kayıt Yok', text: 'Bu aralıkta borsa verisi bulunamadı.', confirmButtonColor: '#1E5AA8' });
-
-        const processed = processChartData(priceData, diffDays);
-        const fPrice = priceData[0].kapanisFiyati, lPrice = priceData[priceData.length - 1].kapanisFiyati;
-        const peak = Math.max(...priceData.map(d => d.kapanisFiyati)), net = lPrice - fPrice;
-        
-        document.getElementById('tm-first-price').textContent = `$${fPrice.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById('tm-last-price').textContent = `$${lPrice.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById('tm-peak').textContent = `$${peak.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById('tm-change').textContent = `${net >= 0 ? '+' : ''}$${net.toLocaleString('tr-TR', {minimumFractionDigits:2})} (${((net/fPrice)*100).toFixed(2)}%)`;
-        document.getElementById('tm-change').className = `metric-value ${net >= 0 ? 'val-profit' : 'val-loss'}`;
-        document.getElementById('time-machine-metrics').classList.remove('d-none');
-
-        if (tmChart) tmChart.destroy();
-        tmChart = new Chart(document.getElementById("timeMachineChart").getContext("2d"), getAcademicChartConfig(symbol, 'Kapanış Fiyatı ($)', processed));
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Hata', text: 'Fiyat verileri API sunucusundan çekilemedi.', confirmButtonColor: '#1E5AA8' });
       }
-    }
 
-    // MODÜL 2
-    async function runLumpSum(e) {
-      e.preventDefault();
-      const symbol = regEl("ls-symbol"), amount = Number(regEl("ls-amount")), buyDate = regEl("ls-buydate"), saleDate = regEl("ls-saledate");
-      const diffDays = Math.ceil((new Date(saleDate) - new Date(buyDate)) / (1000 * 60 * 60 * 24)); if (diffDays <= 0) return;
-
-      try {
-        Swal.showLoading(); const res = await ApiService.getLumpSum({ buyDate, saleDate, amount, symbol });
-        const priceData = await ApiService.getPrices({ sDate: buyDate, eDate: saleDate, symbol }); Swal.close();
-
-        const data = res.data;
-        document.getElementById("m-invested").textContent = `$${data.yatirilanTutar.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById("m-current").textContent = `$${data.guncelDeger.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById("m-profit").textContent = `${data.netKarZarar >= 0 ? '+' : ''}$${data.netKarZarar.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById("m-roi").textContent = data.getiriOrani;
-        document.getElementById("m-profit").className = `metric-value ${data.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
-        document.getElementById("m-roi").className = `metric-value ${data.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
-        document.getElementById("lump-sum-metrics").classList.remove("d-none");
-
-        const processed = processChartData(priceData, diffDays);
-        const pColors = processed.labels.map(l => l===buyDate ? '#15803D' : (l===saleDate ? '#B91C1C' : '#1E5AA8'));
-        const pRadii = processed.labels.map(l => (l===buyDate || l===saleDate) ? 7 : (processed.labels.length > 50 ? 0 : 2));
-
-        if (lsChart) lsChart.destroy();
-        lsChart = new Chart(document.getElementById("lumpSumChart").getContext("2d"), getAcademicChartConfig(symbol, 'Portföy Projeksiyonu ($)', processed, pColors, pRadii));
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Simülasyon Hatası', text: 'Toplu sermaye getiri hesabı başarısız oldu.', confirmButtonColor: '#1E5AA8' });
+      async function handleLogin(e) {
+        e.preventDefault();
+        try {
+          Swal.showLoading();
+          const res = await ApiService.login({
+            email: regEl('login-email'),
+            password: regEl('login-password'),
+          });
+          localStorage.setItem('kuantum_token', res.data.token);
+          localStorage.setItem('kuantum_username', res.data.username);
+          localStorage.setItem('kuantum_userId', res.data._id);
+          localStorage.setItem('kuantum_age', res.data.age);
+          checkAuth();
+          bootstrap.Modal.getInstance(
+            document.getElementById('loginModal')
+          ).hide();
+          document.getElementById('login-form').reset();
+          Swal.close();
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oturum Açılamadı',
+            text: 'E-posta veya şifre hatalı.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
       }
-    }
 
-    // MODÜL 3
-    async function runMarketTiming(e) {
-      e.preventDefault();
-      const symbol = regEl("mt-symbol"), sDate = regEl("mt-sdate"), eDate = regEl("mt-edate");
-      const diffDays = Math.ceil((new Date(eDate) - new Date(sDate)) / (1000 * 60 * 60 * 24)); if (diffDays <= 0) return;
-
-      try {
-        Swal.showLoading(); const timing = await ApiService.getMarketTiming({ sDate, eDate, symbol });
-        const prices = await ApiService.getPrices({ sDate, eDate, symbol }); Swal.close();
-
-        document.getElementById("mt-lowest-val").textContent = `$${timing.enDusuk.fiyat.toFixed(2)}`; document.getElementById("mt-lowest-date").textContent = `Tarih: ${timing.enDusuk.tarih}`;
-        document.getElementById("mt-highest-val").textContent = `$${timing.enYuksek.fiyat.toFixed(2)}`; document.getElementById("mt-highest-date").textContent = `Tarih: ${timing.enYuksek.tarih}`;
-        document.getElementById("market-timing-metrics").classList.remove("d-none");
-
-        const processed = processChartData(prices, diffDays);
-        const pColors = processed.labels.map(l => l===timing.enDusuk.tarih ? '#15803D' : (l===timing.enYuksek.tarih ? '#B91C1C' : '#1E5AA8'));
-        const pRadii = processed.labels.map(l => (l===timing.enDusuk.tarih || l===timing.enYuksek.tarih) ? 7 : 1);
-
-        if (mtChart) mtChart.destroy();
-        mtChart = new Chart(document.getElementById("marketTimingChart").getContext("2d"), getAcademicChartConfig(symbol, 'Fiyat Sınır Eğrisi', processed, pColors, pRadii));
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Analiz Hatası', text: 'Ekstremum tepe/dip değerleri hesaplanamadı.', confirmButtonColor: '#1E5AA8' });
+      function regEl(id) {
+        return document.getElementById(id).value;
       }
-    }
 
-    // MODÜL 4
-    async function runDCA(e) {
-      e.preventDefault();
-      const symbol = regEl("dca-symbol"), amount = Number(regEl("dca-amount")), sDate = regEl("dca-sdate"), eDate = regEl("dca-edate");
-      try {
-        Swal.showLoading(); const res = await ApiService.getDca({ sDate, eDate, amount, symbol }); Swal.close();
-        if (!res || !res.ozet) return Swal.fire({ icon: 'error', title: 'Ekonometrik Hata', text: 'Bu periyotta DCA endeksi hesaplanamadı.', confirmButtonColor: '#1E5AA8' });
+      // Görev 2: Şifre Sıfırlama Talep Handler
+      async function handlePasswordReset(e) {
+        e.preventDefault();
+        const email = regEl('reset-email');
+        try {
+          Swal.showLoading();
+          await api.post('/api/users/password-reset', { email });
+          bootstrap.Modal.getInstance(
+            document.getElementById('passwordResetModal')
+          ).hide();
+          document.getElementById('password-reset-form').reset();
+          Swal.fire({
+            icon: 'success',
+            title: 'Bağlantı Gönderildi!',
+            text: 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hata',
+            text: 'Şifre sıfırlama isteği gönderilemedi. E-posta adresinizi kontrol edin.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
 
-        const oz = res.ozet;
-        document.getElementById("dca-total-invested").textContent = `$${oz.toplamYatirilanTutar.toLocaleString('tr-TR')}`; document.getElementById("dca-transactions-count").textContent = `${res.islemSayisi} Dönem Alımı`;
-        document.getElementById("dca-portfolio-val").textContent = `$${oz.guncelPortfoyDegeri.toLocaleString('tr-TR', {minimumFractionDigits:2})}`; document.getElementById("dca-shares-owned").textContent = `${oz.toplamHisseAdedi.toFixed(4)} Birim Hisse`;
-        document.getElementById("dca-profit-loss").textContent = `${oz.netKarZarar >= 0 ? '+' : ''}$${oz.netKarZarar.toLocaleString('tr-TR', {minimumFractionDigits:2})}`;
-        document.getElementById("dca-roi-pct").textContent = `Getiri Oranı: ${oz.getiriOrani}`;
-        document.getElementById("dca-profit-loss").className = `metric-value ${oz.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
-        document.getElementById("dca-metrics").classList.remove("d-none");
+      // Görev 3: Hesap Güncelleme Modalını Aç (mevcut verilerle doldur)
+      function openUpdateUserModal() {
+        document.getElementById('update-username').value =
+          localStorage.getItem('kuantum_username') || '';
+        document.getElementById('update-age').value =
+          localStorage.getItem('kuantum_age') || '';
+        new bootstrap.Modal(document.getElementById('updateUserModal')).show();
+      }
 
-        if (dcaChart) dcaChart.destroy();
-        const ctx = document.getElementById("dcaChart").getContext("2d");
-        
-        dcaChart = new Chart(ctx, {
+      function openDeleteAccountModal() {
+        document.getElementById('delete-account-form').reset();
+        new bootstrap.Modal(
+          document.getElementById('deleteAccountModal')
+        ).show();
+      }
+
+      async function handleDeleteAccount(e) {
+        e.preventDefault();
+        const userId = localStorage.getItem('kuantum_userId');
+        const token = localStorage.getItem('kuantum_token');
+
+        if (!userId || !token) {
+          return Swal.fire({
+            icon: 'warning',
+            title: 'Oturum Bulunamadı',
+            text: 'Lütfen önce giriş yapın.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+
+        const email = document.getElementById('delete-email').value;
+        const password = document.getElementById('delete-password').value;
+
+        try {
+          Swal.showLoading();
+          await ApiService.deleteAccount(userId, { email, password });
+
+          bootstrap.Modal.getInstance(
+            document.getElementById('deleteAccountModal')
+          ).hide();
+          document.getElementById('delete-account-form').reset();
+
+          localStorage.clear();
+          checkAuth();
+          showSection('landing-section');
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Hesap Silindi',
+            text: 'Hesabınız başarıyla silindi. Görüşmek üzere!',
+            confirmButtonColor: '#1E5AA8',
+          });
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Silme İşlemi Başarısız',
+            text: 'E-posta veya şifre hatalı olabilir. Lütfen kontrol edin.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
+      // Görev 3: Hesap Güncelleme Handler
+      async function handleUpdateUser(e) {
+        e.preventDefault();
+        const username = regEl('update-username');
+        const age = Number(regEl('update-age'));
+        const userId = localStorage.getItem('kuantum_userId');
+        const token = localStorage.getItem('kuantum_token');
+
+        if (!userId || !token) {
+          return Swal.fire({
+            icon: 'warning',
+            title: 'Oturum Bulunamadı',
+            text: 'Lütfen önce giriş yapın.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+
+        try {
+          Swal.showLoading();
+          const response = await fetch(`/api/users/user-update/${userId}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              token: token,
+            },
+            body: JSON.stringify({ username, age }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              data.message || data.error || 'Güncelleme başarısız oldu.'
+            );
+          }
+
+          // localStorage güncelle
+          localStorage.setItem('kuantum_username', username);
+          localStorage.setItem('kuantum_age', age);
+          checkAuth();
+
+          bootstrap.Modal.getInstance(
+            document.getElementById('updateUserModal')
+          ).hide();
+          document.getElementById('update-user-form').reset();
+          Swal.fire({
+            icon: 'success',
+            title: 'Güncelleme Başarılı!',
+            text: 'Hesap bilgileriniz başarıyla güncellendi.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Güncelleme Hatası',
+            text: err.message || 'Bilgileriniz güncellenirken bir hata oluştu.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
+      function processChartData(data, diffDays) {
+        if (diffDays <= 31)
+          return {
+            labels: data.map((d) => d.tarih),
+            prices: data.map((d) => d.kapanisFiyati),
+          };
+        if (diffDays <= 365) {
+          const labels = [],
+            prices = [];
+          for (let i = 0; i < data.length; i += 7) {
+            labels.push(data[i].tarih);
+            prices.push(data[i].kapanisFiyati);
+          }
+          return { labels, prices };
+        }
+        const monthly = {};
+        data.forEach((item) => {
+          const m = item.tarih.substring(0, 7);
+          if (!monthly[m]) monthly[m] = [];
+          monthly[m].push(item.kapanisFiyati);
+        });
+        return {
+          labels: Object.keys(monthly),
+          prices: Object.keys(monthly).map((k) =>
+            Number(
+              (
+                monthly[k].reduce((a, b) => a + b, 0) / monthly[k].length
+              ).toFixed(2)
+            )
+          ),
+        };
+      }
+
+      function getAcademicChartConfig(
+        symbol,
+        labelText,
+        processedData,
+        customPointColors = null,
+        customRadii = null
+      ) {
+        return {
           type: 'line',
           data: {
-            labels: res.aylikDetaylar.map(d=>d.tarih),
+            labels: processedData.labels,
             datasets: [
-              { label: 'Kümülatif Maliyet ($)', data: res.aylikDetaylar.map(d=>d.toplamMaliyet), borderColor: '#999999', borderDash: [4,4], borderWidth: 2, pointRadius: 1 },
-              { label: 'Portföy Büyüklüğü ($)', data: res.aylikDetaylar.map(d=>Number((d.toplamHisse*d.fiyat).toFixed(2))), borderColor: '#1E5AA8', backgroundColor: 'rgba(30, 90, 168, 0.08)', fill: true, borderWidth: 2.5, pointRadius: 2, pointBackgroundColor: '#1E5AA8' }
-            ]
+              {
+                label: `${symbol} - ${labelText}`,
+                data: processedData.prices,
+                borderColor: '#1E5AA8',
+                backgroundColor: 'rgba(30, 90, 168, 0.08)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.1,
+                pointBackgroundColor: customPointColors || '#1E5AA8',
+                pointRadius:
+                  customRadii || (processedData.labels.length > 50 ? 0 : 2),
+              },
+            ],
           },
-          options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, scales: { x: { grid: { color: '#E5E7EB' } }, y: { grid: { color: '#E5E7EB' } } } }
-        });
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'Projeksiyon Hatası', text: 'Periyodik DCA birikim tablosu oluşturulurken teknik bir hata oluştu.', confirmButtonColor: '#1E5AA8' });
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: {
+                labels: {
+                  font: { family: 'Georgia, serif', size: 13 },
+                  color: '#102A4D',
+                },
+              },
+            },
+            scales: {
+              x: {
+                grid: { color: '#E5E7EB' },
+                ticks: { color: '#4B5563', font: { size: 11 } },
+              },
+              y: {
+                grid: { color: '#E5E7EB' },
+                ticks: { color: '#4B5563', font: { size: 11 } },
+              },
+            },
+          },
+        };
       }
-    }
-  </script>
-</body>
+
+      // MODÜL 1
+      async function drawTimeMachine(e) {
+        e.preventDefault();
+        const symbol = regEl('tm-symbol'),
+          sDate = regEl('tm-sdate'),
+          eDate = regEl('tm-edate');
+        const diffDays = Math.ceil(
+          (new Date(eDate) - new Date(sDate)) / (1000 * 60 * 60 * 24)
+        );
+        if (diffDays <= 0) return;
+
+        try {
+          Swal.showLoading();
+          const priceData = await ApiService.getPrices({
+            sDate,
+            eDate,
+            symbol,
+          });
+          Swal.close();
+          if (!priceData || priceData.length === 0)
+            return Swal.fire({
+              icon: 'info',
+              title: 'Kayıt Yok',
+              text: 'Bu aralıkta borsa verisi bulunamadı.',
+              confirmButtonColor: '#1E5AA8',
+            });
+
+          const processed = processChartData(priceData, diffDays);
+          const fPrice = priceData[0].kapanisFiyati,
+            lPrice = priceData[priceData.length - 1].kapanisFiyati;
+          const peak = Math.max(...priceData.map((d) => d.kapanisFiyati)),
+            net = lPrice - fPrice;
+
+          document.getElementById('tm-first-price').textContent =
+            `$${fPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('tm-last-price').textContent =
+            `$${lPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('tm-peak').textContent =
+            `$${peak.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('tm-change').textContent =
+            `${net >= 0 ? '+' : ''}$${net.toLocaleString('tr-TR', { minimumFractionDigits: 2 })} (${((net / fPrice) * 100).toFixed(2)}%)`;
+          document.getElementById('tm-change').className =
+            `metric-value ${net >= 0 ? 'val-profit' : 'val-loss'}`;
+          document
+            .getElementById('time-machine-metrics')
+            .classList.remove('d-none');
+
+          if (tmChart) tmChart.destroy();
+          tmChart = new Chart(
+            document.getElementById('timeMachineChart').getContext('2d'),
+            getAcademicChartConfig(symbol, 'Kapanış Fiyatı ($)', processed)
+          );
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Hata',
+            text: 'Fiyat verileri API sunucusundan çekilemedi.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
+      // MODÜL 2
+      async function runLumpSum(e) {
+        e.preventDefault();
+        const symbol = regEl('ls-symbol'),
+          amount = Number(regEl('ls-amount')),
+          buyDate = regEl('ls-buydate'),
+          saleDate = regEl('ls-saledate');
+        const diffDays = Math.ceil(
+          (new Date(saleDate) - new Date(buyDate)) / (1000 * 60 * 60 * 24)
+        );
+        if (diffDays <= 0) return;
+
+        try {
+          Swal.showLoading();
+          const res = await ApiService.getLumpSum({
+            buyDate,
+            saleDate,
+            amount,
+            symbol,
+          });
+          const priceData = await ApiService.getPrices({
+            sDate: buyDate,
+            eDate: saleDate,
+            symbol,
+          });
+          Swal.close();
+
+          const data = res.data;
+          document.getElementById('m-invested').textContent =
+            `$${data.yatirilanTutar.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('m-current').textContent =
+            `$${data.guncelDeger.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('m-profit').textContent =
+            `${data.netKarZarar >= 0 ? '+' : ''}$${data.netKarZarar.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('m-roi').textContent = data.getiriOrani;
+          document.getElementById('m-profit').className =
+            `metric-value ${data.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
+          document.getElementById('m-roi').className =
+            `metric-value ${data.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
+          document
+            .getElementById('lump-sum-metrics')
+            .classList.remove('d-none');
+
+          const processed = processChartData(priceData, diffDays);
+          const pColors = processed.labels.map((l) =>
+            l === buyDate ? '#15803D' : l === saleDate ? '#B91C1C' : '#1E5AA8'
+          );
+          const pRadii = processed.labels.map((l) =>
+            l === buyDate || l === saleDate
+              ? 7
+              : processed.labels.length > 50
+                ? 0
+                : 2
+          );
+
+          if (lsChart) lsChart.destroy();
+          lsChart = new Chart(
+            document.getElementById('lumpSumChart').getContext('2d'),
+            getAcademicChartConfig(
+              symbol,
+              'Portföy Projeksiyonu ($)',
+              processed,
+              pColors,
+              pRadii
+            )
+          );
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Simülasyon Hatası',
+            text: 'Toplu sermaye getiri hesabı başarısız oldu.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
+      // MODÜL 3
+      async function runMarketTiming(e) {
+        e.preventDefault();
+        const symbol = regEl('mt-symbol'),
+          sDate = regEl('mt-sdate'),
+          eDate = regEl('mt-edate');
+        const diffDays = Math.ceil(
+          (new Date(eDate) - new Date(sDate)) / (1000 * 60 * 60 * 24)
+        );
+        if (diffDays <= 0) return;
+
+        try {
+          Swal.showLoading();
+          const timing = await ApiService.getMarketTiming({
+            sDate,
+            eDate,
+            symbol,
+          });
+          const prices = await ApiService.getPrices({ sDate, eDate, symbol });
+          Swal.close();
+
+          document.getElementById('mt-lowest-val').textContent =
+            `$${timing.enDusuk.fiyat.toFixed(2)}`;
+          document.getElementById('mt-lowest-date').textContent =
+            `Tarih: ${timing.enDusuk.tarih}`;
+          document.getElementById('mt-highest-val').textContent =
+            `$${timing.enYuksek.fiyat.toFixed(2)}`;
+          document.getElementById('mt-highest-date').textContent =
+            `Tarih: ${timing.enYuksek.tarih}`;
+          document
+            .getElementById('market-timing-metrics')
+            .classList.remove('d-none');
+
+          const processed = processChartData(prices, diffDays);
+          const pColors = processed.labels.map((l) =>
+            l === timing.enDusuk.tarih
+              ? '#15803D'
+              : l === timing.enYuksek.tarih
+                ? '#B91C1C'
+                : '#1E5AA8'
+          );
+          const pRadii = processed.labels.map((l) =>
+            l === timing.enDusuk.tarih || l === timing.enYuksek.tarih ? 7 : 1
+          );
+
+          if (mtChart) mtChart.destroy();
+          mtChart = new Chart(
+            document.getElementById('marketTimingChart').getContext('2d'),
+            getAcademicChartConfig(
+              symbol,
+              'Fiyat Sınır Eğrisi',
+              processed,
+              pColors,
+              pRadii
+            )
+          );
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Analiz Hatası',
+            text: 'Ekstremum tepe/dip değerleri hesaplanamadı.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
+      // MODÜL 4
+      async function runDCA(e) {
+        e.preventDefault();
+        const symbol = regEl('dca-symbol'),
+          amount = Number(regEl('dca-amount')),
+          sDate = regEl('dca-sdate'),
+          eDate = regEl('dca-edate');
+        try {
+          Swal.showLoading();
+          const res = await ApiService.getDca({ sDate, eDate, amount, symbol });
+          Swal.close();
+          if (!res || !res.ozet)
+            return Swal.fire({
+              icon: 'error',
+              title: 'Ekonometrik Hata',
+              text: 'Bu periyotta DCA endeksi hesaplanamadı.',
+              confirmButtonColor: '#1E5AA8',
+            });
+
+          const oz = res.ozet;
+          document.getElementById('dca-total-invested').textContent =
+            `$${oz.toplamYatirilanTutar.toLocaleString('tr-TR')}`;
+          document.getElementById('dca-transactions-count').textContent =
+            `${res.islemSayisi} Dönem Alımı`;
+          document.getElementById('dca-portfolio-val').textContent =
+            `$${oz.guncelPortfoyDegeri.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('dca-shares-owned').textContent =
+            `${oz.toplamHisseAdedi.toFixed(4)} Birim Hisse`;
+          document.getElementById('dca-profit-loss').textContent =
+            `${oz.netKarZarar >= 0 ? '+' : ''}$${oz.netKarZarar.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`;
+          document.getElementById('dca-roi-pct').textContent =
+            `Getiri Oranı: ${oz.getiriOrani}`;
+          document.getElementById('dca-profit-loss').className =
+            `metric-value ${oz.netKarZarar >= 0 ? 'val-profit' : 'val-loss'}`;
+          document.getElementById('dca-metrics').classList.remove('d-none');
+
+          if (dcaChart) dcaChart.destroy();
+          const ctx = document.getElementById('dcaChart').getContext('2d');
+
+          dcaChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: res.aylikDetaylar.map((d) => d.tarih),
+              datasets: [
+                {
+                  label: 'Kümülatif Maliyet ($)',
+                  data: res.aylikDetaylar.map((d) => d.toplamMaliyet),
+                  borderColor: '#999999',
+                  borderDash: [4, 4],
+                  borderWidth: 2,
+                  pointRadius: 1,
+                },
+                {
+                  label: 'Portföy Büyüklüğü ($)',
+                  data: res.aylikDetaylar.map((d) =>
+                    Number((d.toplamHisse * d.fiyat).toFixed(2))
+                  ),
+                  borderColor: '#1E5AA8',
+                  backgroundColor: 'rgba(30, 90, 168, 0.08)',
+                  fill: true,
+                  borderWidth: 2.5,
+                  pointRadius: 2,
+                  pointBackgroundColor: '#1E5AA8',
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { mode: 'index', intersect: false },
+              scales: {
+                x: { grid: { color: '#E5E7EB' } },
+                y: { grid: { color: '#E5E7EB' } },
+              },
+            },
+          });
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Projeksiyon Hatası',
+            text: 'Periyodik DCA birikim tablosu oluşturulurken teknik bir hata oluştu.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+    </script>
+  </body>
 </html>
