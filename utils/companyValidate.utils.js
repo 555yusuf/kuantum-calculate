@@ -2,7 +2,7 @@ const Joi = require("joi");
 const {
   companySymbol,
   companySymbolAndName,
-} = require("../models/companySymbol.models"); //* Tum sembollerin isimleri
+} = require("../models/companySymbol.model"); //* Tum sembollerin isimleri
 
 //? Kullanicinin verdigi bilgilerin dogrulugunu kontrol eder
 function validatePriceRequest(obj) {
@@ -25,6 +25,14 @@ function validateForDataRequest(obj) {
       .valid(...companySymbol)
       .required(),
   });
+  return schema.validate(obj);
+}
+function validateInvestment (obj){
+  const schema = Joi.object({
+    date : Joi.date().required(),
+    amount : Joi.number().required(),
+    symbol : Joi.string().valid(...companySymbol).required() 
+  })
   return schema.validate(obj);
 }
 
@@ -56,4 +64,5 @@ module.exports = {
   validateForDataRequest,
   validateFor_dca_,
   IsValidateWeekend,
+  validateInvestment,
 };

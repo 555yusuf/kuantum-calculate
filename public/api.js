@@ -98,7 +98,7 @@ const ApiService = {
     }
   },
 
-  getLumpSum: async (payload) => {
+  getlumpsum: async (payload) => {
     try {
       const response = await api.post('/api/company/amount', payload);
       return response.data;

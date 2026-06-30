@@ -344,7 +344,7 @@
               href="#"
               id="nav-lump-sum"
               onclick="showSection('lump-sum-section')"
-              >LumpSum</a
+              >lumpsum</a
             >
           </li>
           <li class="nav-item">
@@ -475,7 +475,7 @@
                   class="fa-solid fa-scale-balanced me-2"
                   style="color: var(--univ-blue)"
                 ></i>
-                LumpSum (Sermaye Getiri Simülasyonu)
+                lumpsum (Sermaye Getiri Simülasyonu)
               </h4>
               <p class="text-muted" style="font-size: 13px">
                 Belirli bir tarihte yatırılan toplu sermayenin, seçilen varlığın
@@ -650,7 +650,7 @@
         >
           <div>
             <h2 class="serif-heading mb-0">
-              LumpSum: Toplu Sermaye Getiri Simülasyonu
+              lumpsum: Toplu Sermaye Getiri Simülasyonu
             </h2>
             <small class="text-muted"
               >Tek seferlik yatırımların vade sonu nakit akış analizi</small
@@ -748,7 +748,7 @@
             <div class="academic-panel">
               <div class="panel-header-gray">Varlık Değeri Büyüme Eğrisi</div>
               <div style="height: 380px">
-                <canvas id="lumpSumChart"></canvas>
+                <canvas id="lumpsumChart"></canvas>
               </div>
             </div>
           </div>
@@ -1365,7 +1365,7 @@
               </li>
               <li>
                 <a href="#" onclick="showSection('lump-sum-section')"
-                  >LumpSum Sermaye Simülatörü</a
+                  >lumpsum Sermaye Simülatörü</a
                 >
               </li>
               <li>
@@ -1530,7 +1530,7 @@
           .addEventListener('submit', drawTimeMachine);
         document
           .getElementById('lump-sum-form')
-          .addEventListener('submit', runLumpSum);
+          .addEventListener('submit', runlumpsum);
         document
           .getElementById('market-timing-form')
           .addEventListener('submit', runMarketTiming);
@@ -2058,7 +2058,7 @@
       }
 
       // MODÜL 2
-      async function runLumpSum(e) {
+      async function runlumpsum(e) {
         e.preventDefault();
         const symbol = regEl('ls-symbol'),
           amount = Number(regEl('ls-amount')),
@@ -2071,7 +2071,7 @@
 
         try {
           Swal.showLoading();
-          const res = await ApiService.getLumpSum({
+          const res = await ApiService.getlumpsum({
             buyDate,
             saleDate,
             amount,
@@ -2114,7 +2114,7 @@
 
           if (lsChart) lsChart.destroy();
           lsChart = new Chart(
-            document.getElementById('lumpSumChart').getContext('2d'),
+            document.getElementById('lumpsumChart').getContext('2d'),
             getAcademicChartConfig(
               symbol,
               'Portföy Projeksiyonu ($)',

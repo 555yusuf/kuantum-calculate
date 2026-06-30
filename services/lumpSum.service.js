@@ -3,16 +3,16 @@ const {
   getCompanySymbol,
   IsValidateWeekend,
   validatePriceRequest,
-} = require("../utils/companyValidate.utils");
-const axios = require("axios");
-
-const API_KEY = process.env.TIINGO_API_KEY;
-
-const LumbSum = async (obj) => {
+} = require('../utils/companyValidate.utils');
+const { getApiResponsData } = require('./apiRespons.service');
+const { get } = require('mongoose');
+const lumpsum = async (obj) => {
   const { error } = await validateForDataRequest(obj);
 
   if (error) {
     return {
+      error: true,
+      success: false,
       message: error.details[0].message,
     };
   }
@@ -30,22 +30,15 @@ const LumbSum = async (obj) => {
       message: `Girdiginiz tarih ${obj.saleDate} hafta sonuna denk gelmektedir lütfen değiştiriniz `,
     };
   }
-  //   console.log(`start  date : ${obj.buyDate} || End date ${obj.saleDate} || symbol ${obj.symbol}`,);
 
-  async function apiResponse(date) {
-    return await axios.get(
-      `https://api.tiingo.com/tiingo/daily/${obj.symbol}/prices?startDate=${date}&endDate=${date}&token=${API_KEY}`,
-    );
-  }
-
-  let res1 = await apiResponse(obj.buyDate);
-  const buyPrice = res1.data[0].adjClose;
-  let res2 = await apiResponse(obj.saleDate);
-  const saleAmount = res2.data[0].adjClose;
+  let res1 = await getApiResponsData(obj.symbol, obj.buyDate, obj.buyDate);
+  const buyPrice = res1[0].adjClose;
+  let res2 = await getApiResponsData(obj.symbol, obj.saleDate, obj.saleDate);
+  const saleAmount = res2[0].adjClose;
 
   let stocks = obj.amount / buyPrice;
 
-  console.log(`${stocks} alindi `);
+  // console.log(`${stocks} alindi `);
 
   let newAmount = stocks * saleAmount;
 
@@ -56,5 +49,5 @@ const LumbSum = async (obj) => {
 };
 
 module.exports = {
-  LumbSum,
+  lumpsum,
 };

@@ -1,8 +1,5 @@
-const axios = require("axios");
+const {getApiResponsData} = require('../services/apiRespons.service')
 const { validateFor_dca_ } = require("../utils/companyValidate.utils");
-
-const API_KEY = process.env.TIINGO_API_KEY;
-
 const calculateDCA = async (obj) => {
   const { error } = await validateFor_dca_(obj);
 
@@ -14,10 +11,9 @@ const calculateDCA = async (obj) => {
   }
 
   try {
-    const { data: price } = await axios.get(
-      `https://api.tiingo.com/tiingo/daily/${obj.symbol}/prices?startDate=${obj.sDate}&endDate=${obj.eDate}&token=${API_KEY}`,
-    );
-
+    const price = await getApiResponsData(obj.symbol,obj.sDate,obj.eDate);
+    // console.log(price);
+    
     if (!price || price.length === 0) {
       return { success: false, message: "Bu tarih aralığında borsa verisi bulunamadı." };
     }

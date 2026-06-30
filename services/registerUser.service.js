@@ -14,7 +14,7 @@ const registerUserService = async (obj) => {
   const usernameExists = await User.findOne({ username: obj.username });
   if (usernameExists) {
     return {
-      error: "lutfen baska bir kullanici adi kullaniniz ",
+      error: "lutfen giris yapin ",
     };
   }
 

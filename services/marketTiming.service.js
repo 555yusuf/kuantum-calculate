@@ -1,8 +1,5 @@
-const { validatePriceRequest } = require("../utils/companyValidate.utils");
-
-const axios = require("axios");
-
-const API_KEY = process.env.TIINGO_API_KEY;
+const { validatePriceRequest } = require('../utils/companyValidate.utils');
+const { getApiResponsData } = require('../services/apiRespons.service');
 
 const analyzeMarketTiming = async (obj) => {
   const { error } = await validatePriceRequest(obj);
@@ -13,11 +10,10 @@ const analyzeMarketTiming = async (obj) => {
     };
   }
 
-  const apiResponse = await axios.get(
-    `https://api.tiingo.com/tiingo/daily/${obj.symbol}/prices?startDate=${obj.sDate}&endDate=${obj.eDate}&token=${API_KEY}`,
-  );
-
-  const data = apiResponse.data;
+  const apiResponse = await getApiResponsData(obj.symbol, obj.sDate, obj.eDate);
+  // console.log(apiResponse);
+  
+  const data = apiResponse;
   let priceData = [];
   let peakDay = data[0];
   let troughDay = data[0];
@@ -32,11 +28,11 @@ const analyzeMarketTiming = async (obj) => {
     result: {
       enYuksek: {
         fiyat: peakDay.close,
-        tarih: peakDay.date.split("T")[0],
+        tarih: peakDay.date.split('T')[0],
       },
       enDusuk: {
         fiyat: troughDay.close,
-        tarih: troughDay.date.split("T")[0],
+        tarih: troughDay.date.split('T')[0],
       },
     },
   };
