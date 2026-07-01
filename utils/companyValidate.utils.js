@@ -1,8 +1,8 @@
-const Joi = require("joi");
+const Joi = require('joi');
 const {
   companySymbol,
   companySymbolAndName,
-} = require("../models/companySymbol.model"); //* Tum sembollerin isimleri
+} = require('../models/companySymbol.model'); //* Tum sembollerin isimleri
 
 //? Kullanicinin verdigi bilgilerin dogrulugunu kontrol eder
 function validatePriceRequest(obj) {
@@ -27,14 +27,27 @@ function validateForDataRequest(obj) {
   });
   return schema.validate(obj);
 }
-function validateInvestment (obj){
+function validateBuyInvestment(obj) {
   const schema = Joi.object({
-    date : Joi.date().required(),
-    amount : Joi.number().required(),
-    symbol : Joi.string().valid(...companySymbol).required() 
-  })
+    date: Joi.date().required(),
+    amount: Joi.number().required(),
+    symbol: Joi.string()
+      .valid(...companySymbol)
+      .required(),
+  });
   return schema.validate(obj);
 }
+// TODO
+// function validateSaleInvestment(obj) {
+//   const schema = Joi.object({
+//     date: Joi.date().required(),
+//     amount: Joi.number().required(),
+//     symbol: Joi.string()
+//       .valid(...companySymbol)
+//       .required(),
+//   });
+//   return schema.validate(obj);
+// }
 
 function validateFor_dca_(obj) {
   const schema = Joi.object({
@@ -64,5 +77,6 @@ module.exports = {
   validateForDataRequest,
   validateFor_dca_,
   IsValidateWeekend,
-  validateInvestment,
+  validateBuyInvestment,
+  // validateSaleInvestment,
 };

@@ -1,14 +1,15 @@
 const { getApiResponsData } = require('../services/apiRespons.service');
 const {
   IsValidateWeekend,
-  validateInvestment,
+  validateBuyInvestment,
 } = require('../utils/companyValidate.utils');
 const { Investment } = require('../models/Investment.model');
 const { User } = require('../models/User.model');
-
+const { MovementsService } = require('../services/Movements.service');
+const { Movements } = require('../models/investmentMovements.model');
 const getInvestmentService = async (req, investorId) => {
   try {
-    const { error } = validateInvestment(req.body);
+    const { error } = validateBuyInvestment(req.body);
     if (error) {
       return {
         error: error,
@@ -51,6 +52,8 @@ const getInvestmentService = async (req, investorId) => {
       symbol: req.body.symbol,
     });
     await newInvestment.save();
+
+    await MovementsService(investor._id, newInvestment._id);
 
     return { success: true, message: 'Yatırımınız başarıyla yapıldı.' };
   } catch (err) {
