@@ -137,8 +137,12 @@ const myinvestment = asyncHandler(async (req, res) => {
   if (serviceRes.error) {
     return res.status(400).json({ error: serviceRes.error });
   }
-  console.log('+=========');
-  console.log(serviceRes.alldata);
+
+  if (serviceRes.message) {
+    return res.status(200).json([]);
+  }
+  // console.log('+=========');
+  // console.log(serviceRes.alldata);
   
   res.status(200).json(serviceRes.alldata);
 });

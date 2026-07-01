@@ -365,6 +365,15 @@
               >Kuantum DCA</a
             >
           </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="nav-live-tracking"
+              onclick="showSection('live-tracking-section')"
+              >Canlı Takip</a
+            >
+          </li>
         </ul>
         <div class="d-flex align-items-center gap-2 py-1" id="auth-buttons">
           <button
@@ -382,43 +391,68 @@
             <i class="fa-solid fa-user-plus me-1"></i> Kayıt Ol
           </button>
         </div>
-        <div class="d-none align-items-center gap-3 py-1" id="user-profile">
-          <span class="text-white" style="font-size: 13px"
-            ><i
-              class="fa-solid fa-user-graduate me-1"
-              style="color: #f59e0b"
-            ></i>
-            Araştırmacı: <strong id="username-display"></strong
-          ></span>
-          <button
-            class="btn btn-sm btn-outline-light rounded-1"
-            onclick="openUpdateUserModal()"
-            style="font-size: 12px; border-color: rgba(255, 255, 255, 0.4)"
-          >
-            <i class="fa-solid fa-pen-to-square me-1"></i>Hesabı Düzenle
-          </button>
-          <button
-            class="btn btn-sm btn-outline-light rounded-1"
-            onclick="openDeleteAccountModal()"
-            style="
-              font-size: 12px;
-              border-color: rgba(220, 53, 69, 0.6);
-              color: #f87171;
-            "
-          >
-            <i class="fa-solid fa-trash me-1"></i>Hesabı Sil
-          </button>
-          <button
-            class="btn btn-sm btn-danger rounded-1"
-            onclick="logout()"
-            style="font-size: 12px"
-          >
-            Oturumu Kapat
-          </button>
+        <div class="d-none align-items-center py-1" id="user-profile">
+          <div class="dropdown">
+            <button
+              class="btn btn-outline-light dropdown-toggle d-flex align-items-center gap-2 border-0"
+              type="button"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="font-size: 13px"
+            >
+              <i class="fa-solid fa-user-graduate" style="color: #f59e0b"></i>
+              <span>Araştırmacı: <strong id="username-display"></strong></span>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end shadow-sm"
+              aria-labelledby="profileDropdown"
+            >
+              <li>
+                <button
+                  class="dropdown-item"
+                  onclick="showSection('investments-section')"
+                >
+                  <i class="fa-solid fa-wallet me-2 text-success"></i>
+                  Yatırımlarım
+                </button>
+              </li>
+              <li>
+                <button
+                  class="dropdown-item"
+                  onclick="showSection('movements-section')"
+                >
+                  <i class="fa-solid fa-clock-rotate-left me-2 text-info"></i>
+                  İşlem Geçmişi
+                </button>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button class="dropdown-item" onclick="openUpdateUserModal()">
+                  <i class="fa-solid fa-pen-to-square me-2 text-primary"></i>
+                  Hesabı Düzenle
+                </button>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <button
+                  class="dropdown-item text-danger"
+                  onclick="openDeleteAccountModal()"
+                >
+                  <i class="fa-solid fa-trash me-2"></i> Hesabı Sil
+                </button>
+              </li>
+              <li>
+                <button class="dropdown-item" onclick="logout()">
+                  <i class="fa-solid fa-right-from-bracket me-2"></i> Oturumu
+                  Kapat
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
-
     <main class="app-section active py-5" id="landing-section">
       <div class="container">
         <div
@@ -1344,6 +1378,231 @@
       </div>
     </div>
 
+    <section class="app-section py-5" id="live-tracking-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">Canlı Takip & Yatırım</h2>
+            <small class="text-muted"
+              >Anlık piyasa verileri ve doğrudan alım işlemleri</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="academic-panel mb-0 pb-4">
+              <div class="row align-items-end mb-4">
+                <div class="col-md-6">
+                  <label class="form-label">İncelenecek Hisse Senedi</label>
+                  <select
+                    class="form-select company-select"
+                    id="lt-symbol"
+                  ></select>
+                </div>
+              </div>
+
+              <div
+                id="global-price-banner"
+                class="d-none bg-light py-4 border rounded"
+                style="box-shadow: inset 0 -4px 6px -6px #000"
+              >
+                <div class="container">
+                  <div class="row align-items-center">
+                    <div
+                      class="col-md-4 text-center text-md-start mb-3 mb-md-0"
+                    >
+                      <span class="badge bg-primary mb-2">Canlı Takip</span>
+                      <h2
+                        class="serif-heading fw-bold mb-0"
+                        id="banner-symbol"
+                        style="font-size: 2.5rem; color: #102a4d"
+                      >
+                        ---
+                      </h2>
+                      <div class="text-muted" style="font-size: 14px">
+                        Güncel Piyasa Değeri
+                      </div>
+                      <div
+                        id="banner-price"
+                        class="fw-bold mt-1 text-success"
+                        style="font-size: 3rem; line-height: 1"
+                      >
+                        $0.00
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div
+                        class="academic-panel mb-0 p-3"
+                        style="height: 180px"
+                      >
+                        <canvas id="bannerTrendChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="academic-panel">
+              <div class="panel-header-gray">Yatırım Yap / Hisse Al</div>
+              <form id="buy-investment-form">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Hisse Sembolü</label>
+                    <!-- <input
+                      type="text"
+                      class="form-control"
+                      id="buy-symbol"
+                      placeholder="Örn: AAPL"
+                      required
+                      style="text-transform: uppercase"
+                    /> -->
+                    <select
+                      class="form-select company-select"
+                      id="buy-symbol"
+                    ></select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Yatırılacak Tutar ($)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="buy-amount"
+                      required
+                      min="10"
+                      placeholder="Örn: 1000"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label">Tarih</label>
+                    <input
+                      type="date"
+                      class="form-control date-validate"
+                      id="buy-date"
+                      required
+                    />
+                    <div class="weekend-alert-box">
+                      Borsa hafta sonu kapalıdır!
+                    </div>
+                  </div>
+                  <div class="col-12 text-end mt-4">
+                    <button
+                      type="submit"
+                      class="btn btn-success fw-bold px-5 py-2"
+                    >
+                      <i class="fa-solid fa-cart-shopping me-2"></i>Hisse Al
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section py-5" id="investments-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">Yatırımlarım</h2>
+            <small class="text-muted"
+              >Güncel varlık dağılımı ve portföy durumu</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="academic-panel">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Sembol</th>
+                      <th>Miktar</th>
+                      <th>Yatırılan Tutar</th>
+                      <th>Güncel Değer</th>
+                      <th>Net Kâr / Zarar</th>
+                    </tr>
+                  </thead>
+                  <tbody id="investments-table-body">
+                    <tr>
+                      <td colspan="5" class="text-muted">Yükleniyor...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="app-section py-5" id="movements-section">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4"
+        >
+          <div>
+            <h2 class="serif-heading mb-0">İşlem Geçmişi</h2>
+            <small class="text-muted"
+              >Geçmiş alım ve satım hareketleri dökümü</small
+            >
+          </div>
+          <button
+            class="btn-academic-outline"
+            onclick="showSection('landing-section')"
+          >
+            &larr; Merkeze Dön
+          </button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="academic-panel">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Tarih</th>
+                      <th>İşlem Türü</th>
+                      <th>Sembol</th>
+                      <th>Tutar</th>
+                      <th>Fon Miktarı</th>
+                      <th>Durum</th>
+                    </tr>
+                  </thead>
+                  <tbody id="movements-table-body">
+                    <tr>
+                      <td colspan="6" class="text-muted">Yükleniyor...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <footer class="university-footer">
       <div class="container">
         <div class="row g-4 mb-4">
@@ -1513,7 +1772,8 @@
       let tmChart = null,
         lsChart = null,
         mtChart = null,
-        dcaChart = null;
+        dcaChart = null,
+        bannerChart = null;
 
       document.addEventListener('DOMContentLoaded', () => {
         populateDropdowns();
@@ -1547,6 +1807,9 @@
         document
           .getElementById('delete-account-form')
           .addEventListener('submit', handleDeleteAccount);
+        document
+          .getElementById('buy-investment-form')
+          .addEventListener('submit', handleBuyInvestment);
 
         // Görev 1: Şifre Göster/Gizle Toggle
         document
@@ -1616,8 +1879,28 @@
         });
       });
 
-      // Madde 1: sectionId -> id Çökme Düzeltmesi
-      function showSection(id) {
+      async function showSection(id) {
+        // AUTH GUARD (Yetkilendirme Koruması)
+        if (
+          id === 'investments-section' ||
+          id === 'movements-section' ||
+          id === 'lump-sum-section' ||
+          id === 'dca-section'
+        ) {
+          const token = localStorage.getItem('kuantum_token');
+          if (!token) {
+            Swal.fire({
+              icon: 'warning',
+              title: 'Yetkisiz Erişim',
+              text: 'Lütfen önce giriş yapınız.',
+              confirmButtonColor: '#1E5AA8',
+            }).then(() => {
+              new bootstrap.Modal(document.getElementById('loginModal')).show();
+            });
+            return;
+          }
+        }
+
         document
           .querySelectorAll('.app-section')
           .forEach((s) => s.classList.remove('active'));
@@ -1634,7 +1917,87 @@
           document.getElementById('nav-market-timing').classList.add('active');
         if (id === 'dca-section')
           document.getElementById('nav-dca').classList.add('active');
+        if (id === 'live-tracking-section')
+          document.getElementById('nav-live-tracking').classList.add('active');
+        if (id === 'investments-section') {
+          loadInvestments();
+        }
+        if (id === 'movements-section') {
+          loadMovements();
+        }
         window.scrollTo(0, 0);
+      }
+
+      async function loadInvestments() {
+        const userId = localStorage.getItem('kuantum_userId');
+        if (!userId) return;
+        try {
+          const data = await ApiService.getInvestments(userId);
+          const tbody = document.getElementById('investments-table-body');
+          tbody.innerHTML = '';
+          
+          if (!data || !Array.isArray(data) || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="text-muted">Henüz yatırımınız bulunmamaktadır.</td></tr>';
+            return;
+          }
+          
+          data.forEach((inv) => {
+            if (typeof inv === 'string') return;
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td class="fw-bold">${inv.sembol || '-'}</td>
+              <td>${inv.alinanFonMiktari || 0}</td>
+              <td>$${(inv.yatirilanTutar || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</td>
+              <td>$${(inv.guncelDeger || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</td>
+              <td class="${(inv.netKarZarar || 0) >= 0 ? 'text-success' : 'text-danger'} fw-bold">
+                ${(inv.netKarZarar || 0) >= 0 ? '+' : ''}$${(inv.netKarZarar || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } catch (err) {
+          console.error('Yatırımlarım yüklenirken hata:', err);
+          document.getElementById('investments-table-body').innerHTML =
+            '<tr><td colspan="5" class="text-danger">Veriler yüklenirken hata oluştu.</td></tr>';
+        }
+      }
+
+      async function loadMovements() {
+        const userId = localStorage.getItem('kuantum_userId');
+        if (!userId) return;
+        try {
+          const data = await ApiService.getMovements(userId);
+          const tbody = document.getElementById('movements-table-body');
+          tbody.innerHTML = '';
+          
+          if (!data || !Array.isArray(data) || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="6" class="text-muted">İşlem geçmişiniz bulunmamaktadır.</td></tr>';
+            return;
+          }
+          
+          data.forEach((mov) => {
+            const tr = document.createElement('tr');
+            const islem = mov.islem || {};
+            const isBuy = mov.islemTuru === 'buy' || mov.islemTuru === 'Alış' || mov.islemTuru === 'Alım';
+            
+            tr.innerHTML = `
+              <td>${new Date(mov.tarih).toLocaleDateString('tr-TR')}</td>
+              <td><span class="badge ${isBuy ? 'bg-success' : 'bg-danger'}">${mov.islemTuru || '-'}</span></td>
+              <td class="fw-bold">${islem.sembol || '-'}</td>
+              <td>$${(islem.yatirilanTutar || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</td>
+              <td>${islem.alinanFonMiktari || 0}</td>
+              <td>Tamamlandı</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } catch (err) {
+          console.error('İşlem geçmişi yüklenirken hata:', err);
+          document.getElementById('movements-table-body').innerHTML =
+            '<tr><td colspan="6" class="text-danger">Veriler yüklenirken hata oluştu.</td></tr>';
+        }
       }
 
       function populateDropdowns() {
@@ -1645,12 +2008,90 @@
             select.innerHTML += `<option value="${c.sembol}">${c.sembol} - ${c.isim}</option>`;
           });
 
-          new TomSelect(select, {
+          const ts = new TomSelect(select, {
             create: false,
             sortField: { field: 'text', direction: 'asc' },
             placeholder: 'Hisse Senedi Ara...',
             maxOptions: null,
           });
+
+          // Global Price Banner Tetikleyicisi
+          if (select.id !== 'buy-symbol') {
+            ts.on('change', async function (value) {
+              if (!value) return;
+              try {
+                const data = await ApiService.getCurrentPrice({
+                  symbol: value,
+                });
+                document
+                  .getElementById('global-price-banner')
+                  .classList.remove('d-none');
+                document.getElementById('banner-symbol').textContent = value;
+
+                if (data && data.length > 0) {
+                  const latestPrice =
+                    data[data.length - 1].kapanisFiyati ||
+                    data[data.length - 1].close ||
+                    0;
+                  document.getElementById('banner-price').textContent =
+                    '$' +
+                    latestPrice.toLocaleString('tr-TR', {
+                      minimumFractionDigits: 2,
+                    });
+
+                  // Chart Render
+                  if (bannerChart) bannerChart.destroy();
+                  const ctx = document
+                    .getElementById('bannerTrendChart')
+                    .getContext('2d');
+                  const labels = data.map((d) => {
+                    let l = d.tarih || d.date || '';
+                    if (l.includes('==>')) l = 'Güncel';
+                    return l;
+                  });
+                  const prices = data.map(
+                    (d) => d.kapanisFiyati || d.close || 0
+                  );
+
+                  bannerChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                      labels: labels,
+                      datasets: [
+                        {
+                          label: `${value} Fiyatı`,
+                          data: prices,
+                          borderColor: '#10b981',
+                          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                          borderWidth: 2,
+                          fill: true,
+                          tension: 0.2,
+                          pointRadius: 4,
+                          pointBackgroundColor: '#10b981',
+                        },
+                      ],
+                    },
+                    options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: false },
+                      },
+                      scales: {
+                        x: { display: true, grid: { display: false } },
+                        y: { display: true, grid: { color: '#e5e7eb' } },
+                      },
+                    },
+                  });
+                } else {
+                  document.getElementById('banner-price').textContent = '-';
+                  if (bannerChart) bannerChart.destroy();
+                }
+              } catch (err) {
+                console.error('Güncel fiyat alınamadı', err);
+              }
+            });
+          }
         });
       }
 
@@ -1803,6 +2244,74 @@
         ).show();
       }
 
+      async function handleBuyInvestment(e) {
+        e.preventDefault();
+        const userId = localStorage.getItem('kuantum_userId');
+        const token = localStorage.getItem('kuantum_token');
+
+        if (!userId || !token) {
+          return Swal.fire({
+            icon: 'warning',
+            title: 'Yetkisiz Erişim',
+            text: 'Bu işlemi gerçekleştirmek için lütfen giriş yapınız.',
+            confirmButtonColor: '#1E5AA8',
+          }).then(() => {
+            new bootstrap.Modal(document.getElementById('loginModal')).show();
+          });
+        }
+
+        const symbol = document.getElementById('buy-symbol').tomselect ? document.getElementById('buy-symbol').tomselect.getValue() : document.getElementById('buy-symbol').value;
+        const amount = document.getElementById('buy-amount').value;
+        const date = document.getElementById('buy-date').value;
+
+        if (!symbol) {
+          return Swal.fire({
+            icon: 'error',
+            title: 'Hata',
+            text: 'Lütfen yatırım yapmak istediğiniz hisse senedini seçin.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+
+        try {
+          Swal.showLoading();
+          const res = await ApiService.buyInvestment(userId, {
+            symbol,
+            amount: Number(amount),
+            date,
+          });
+
+          if (res && res.error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'İşlem Başarısız',
+              text: res.error,
+              confirmButtonColor: '#1E5AA8',
+            });
+            return;
+          }
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Başarılı!',
+            text: 'Yatırımınız başarıyla kaydedildi.',
+            confirmButtonColor: '#1E5AA8',
+          });
+          document.getElementById('buy-investment-form').reset();
+        } catch (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'İşlem Başarısız',
+            text:
+              err.response?.data?.error ||
+              err.response?.data?.message ||
+              err.message ||
+              'Yatırım işlemi sırasında bir hata oluştu.',
+            confirmButtonColor: '#1E5AA8',
+          });
+        }
+      }
+
       async function handleDeleteAccount(e) {
         e.preventDefault();
         const userId = localStorage.getItem('kuantum_userId');
@@ -1819,6 +2328,21 @@
 
         const email = document.getElementById('delete-email').value;
         const password = document.getElementById('delete-password').value;
+
+        const confirmResult = await Swal.fire({
+          title: 'Emin misiniz?',
+          text: 'Hesabınızı silerseniz, sahip olduğunuz tüm yatırımlar ve işlem geçmişiniz kalıcı olarak silinecektir. Onaylıyor musunuz?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Evet, Kalıcı Olarak Sil',
+          cancelButtonText: 'Vazgeç',
+        });
+
+        if (!confirmResult.isConfirmed) {
+          return;
+        }
 
         try {
           Swal.showLoading();

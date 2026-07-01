@@ -11,7 +11,7 @@ async function currentprice(symbol) {
 const getInvestment = async (item) => {
   const element = await Investment.findById(item);
 
-  if (element.length) {
+  if (!element) {
     return {
       message: 'kullanici icin yatirim bulunmadi ',
     };

@@ -136,5 +136,45 @@ const ApiService = {
       handleError(error);
       throw error;
     }
+  },
+
+  getCurrentPrice: async (payload) => {
+    try {
+      const response = await api.post('/api/company/current-price', payload);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  },
+
+  getInvestments: async (userId) => {
+    try {
+      const response = await api.get(`/api/company/myinvestment/${userId}`);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  },
+
+  getMovements: async (userId) => {
+    try {
+      const response = await api.get(`/api/company/Movements/${userId}`);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
+  },
+
+  buyInvestment: async (userId, payload) => {
+    try {
+      const response = await api.post(`/api/company/investments/${userId}`, payload);
+      return response.data;
+    } catch (error) {
+      handleError(error);
+      throw error;
+    }
   }
 };
