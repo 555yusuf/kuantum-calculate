@@ -66,7 +66,7 @@
         background-color: var(--univ-blue-dark);
         color: #e5e7eb;
         font-size: 12px;
-        padding: 6px 0;
+        padding: 6px 1rem;
         border-bottom: 2px solid #d97706; /* Traditional Academic Gold Accent */
       }
       .top-info-bar a {
@@ -82,8 +82,15 @@
       /* Main University Header */
       .university-header {
         background-color: #ffffff;
-        padding: 25px 0;
+        padding: 25px 1rem;
         border-bottom: 1px solid var(--border-gray);
+      }
+      
+      .university-header .container {
+        width: 100%;
+        max-width: 1350px;
+        padding: 0;
+        margin: 0 auto;
       }
 
       .univ-brand-box {
@@ -126,12 +133,13 @@
         background-color: var(--univ-blue);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border-bottom: 1px solid #154078;
+        padding: 0 1rem;
       }
       .main-navbar .nav-link {
         color: #ffffff !important;
         font-family: Georgia, serif;
         font-size: 15px;
-        padding: 12px 20px !important;
+        padding: 12px 15px !important;
         border-right: 1px solid rgba(255, 255, 255, 0.15);
         transition: background 0.15s ease;
       }
@@ -143,6 +151,22 @@
         background-color: var(--univ-blue-dark) !important;
         color: #ffffff !important;
         font-weight: bold;
+      }
+      
+      @media (max-width: 768px) {
+        .main-navbar {
+          padding: 0 0.5rem;
+        }
+        
+        .main-navbar .nav-link {
+          font-size: 13px;
+          padding: 10px 10px !important;
+          border-right: none;
+        }
+        
+        .main-navbar .nav-item:first-child .nav-link {
+          border-left: none;
+        }
       }
 
       /* Standardized Browser Buttons */
@@ -162,6 +186,7 @@
       }
       .btn-academic:hover {
         background: linear-gradient(to bottom, #1e5aa8, #102a4d);
+        transition: all 0.2s ease;
       }
       .btn-academic-outline {
         background: #ffffff;
@@ -171,6 +196,25 @@
         font-size: 14px;
         padding: 8px 18px;
         border-radius: 3px;
+        transition: all 0.2s ease;
+      }
+      .btn-academic-outline:hover {
+        background-color: #f0f7ff;
+      }
+      
+      /* Responsive buttons */
+      @media (max-width: 576px) {
+        .btn-academic,
+        .btn-academic-outline,
+        .btn {
+          font-size: 13px;
+          padding: 6px 12px;
+          width: 100%;
+        }
+        
+        .btn-success {
+          width: 100%;
+        }
       }
 
       /* Structured Institutional Cards */
@@ -182,6 +226,7 @@
         padding: 25px;
         margin-bottom: 30px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
       }
 
       .panel-header-gray {
@@ -192,6 +237,18 @@
         font-weight: bold;
         color: var(--univ-blue-dark);
         margin: -25px -25px 20px -25px;
+      }
+      
+      @media (max-width: 768px) {
+        .academic-panel {
+          padding: 15px;
+          margin-bottom: 20px;
+        }
+        
+        .panel-header-gray {
+          margin: -15px -15px 15px -15px;
+          padding: 8px 12px;
+        }
       }
 
       /* Form Controls */
@@ -295,11 +352,222 @@
       /* Section Visibility */
       .app-section {
         display: none;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
       }
       .app-section.active {
         display: block;
       }
-    </style>
+      
+      /* Enhanced Container and Responsive Design */
+      .container,
+      .container-fluid {
+        width: 100%;
+        max-width: 100% !important;
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+      }
+      
+      /* Improve padding on smaller screens */
+      @media (max-width: 768px) {
+        .container {
+          padding-left: 0.75rem !important;
+          padding-right: 0.75rem !important;
+        }
+        
+        .app-section {
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+        
+        .academic-panel {
+          padding: 15px;
+          margin-bottom: 20px;
+        }
+        
+        .univ-title {
+          font-size: 22px;
+        }
+        
+        .univ-subtitle {
+          font-size: 11px;
+        }
+        
+        h1, h2 {
+          font-size: 1.5rem;
+        }
+        
+        .main-navbar .nav-link {
+          padding: 10px 12px !important;
+          font-size: 13px;
+        }
+        
+        .row > [class*="col-"] {
+          padding-left: 0.375rem;
+          padding-right: 0.375rem;
+        }
+      }
+      
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .container {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+        }
+        
+        .academic-panel {
+          padding: 20px;
+          margin-bottom: 25px;
+        }
+      }
+      
+      @media (min-width: 1025px) {
+        .container {
+          padding-left: 1.5rem !important;
+          padding-right: 1.5rem !important;
+        }
+        
+        .academic-panel {
+          padding: 25px;
+          margin-bottom: 30px;
+        }
+      }
+      
+      /* Better spacing for rows on all screen sizes */
+      .row {
+        --bs-gutter-x: 0.75rem;
+      }
+      
+      @media (max-width: 576px) {
+        .row {
+          --bs-gutter-x: 0.5rem;
+        }
+      }
+      
+      /* Responsive section padding */
+      .app-section py-5 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+      }
+      
+      /* Improve footer responsiveness */
+      .university-footer {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+      
+      @media (max-width: 768px) {
+        .university-footer {
+          padding-top: 1.5rem;
+          padding-bottom: 1.5rem;
+        }
+        
+        .university-footer h5 {
+          font-size: 16px;
+          margin-bottom: 0.75rem;
+        }
+        
+        .university-footer p {
+          font-size: 13px;
+          margin-bottom: 0.75rem;
+        }
+      }
+      
+      /* Better header responsiveness */
+      @media (max-width: 768px) {
+        .university-header {
+          padding: 15px 0;
+        }
+        
+        .univ-emblem {
+          width: 45px;
+          height: 45px;
+          font-size: 20px;
+        }
+      }
+      
+      /* Improve form responsiveness */
+      @media (max-width: 768px) {
+        .col-md-4, .col-md-6, .col-md-8 {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+        
+        .form-control,
+        .form-select {
+          font-size: 14px;
+          padding: 10px;
+        }
+      }
+      
+      /* Better table responsiveness */
+      .table-responsive {
+        font-size: 0.9rem;
+      }
+      
+      @media (max-width: 768px) {
+        .table {
+          font-size: 0.8rem;
+        }
+        
+        .table th,
+        .table td {
+          padding: 0.5rem;
+        }
+      }
+      
+      /* Metric boxes responsive */
+      .metric-box {
+        padding: 12px;
+      }
+      
+      @media (max-width: 576px) {
+        .metric-box {
+          padding: 10px;
+        }
+        
+        .metric-value {
+          font-size: 18px;
+        }
+        
+        .metric-label {
+          font-size: 10px;
+        }
+      }
+    
+      body{
+        overflow-x:hidden;
+      }
+
+      @media (max-width:768px){
+
+        .main-navbar .nav{
+          flex-wrap:nowrap;
+          overflow-x:auto;
+          white-space:nowrap;
+          scrollbar-width:none;
+        }
+
+        .main-navbar .nav::-webkit-scrollbar{
+          display:none;
+        }
+
+        .university-header .container,
+        .university-header .container-fluid{
+          flex-direction:column;
+          align-items:flex-start !important;
+          gap:10px;
+        }
+
+        .univ-title{
+          font-size:20px !important;
+        }
+
+        .univ-subtitle{
+          font-size:11px !important;
+        }
+      }
+
+</style>
   </head>
   <body>
     <header class="university-header">
