@@ -25,6 +25,19 @@ api.interceptors.request.use(
   }
 );
 
+// Axios Response Interceptor - 401 Unauthorized yakalama
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      if (typeof window !== 'undefined' && window.logout) {
+        window.logout();
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Hata Yönetimi Fonksiyonu - SweetAlert2 Entegrasyonu
 function handleError(err) {
   console.error('API Hatası:', err);
