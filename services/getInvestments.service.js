@@ -1,6 +1,6 @@
 const { User } = require('../models/User.model');
 const { Investment } = require('../models/Investment.model');
-const { getCurrentPriceService } = require('../services/currentprice.service');
+const { getCurrentPriceService } = require('./GetCurrentPrice.service');
 const { Collection } = require('mongoose');
 async function currentprice(symbol) {
   const { weekData } = await getCurrentPriceService(symbol);

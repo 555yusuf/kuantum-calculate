@@ -1,11 +1,11 @@
-const { getApiResponsData } = require('../services/apiRespons.service');
+const { getApiResponsData } = require('./apiRespons.service');
 const {
   IsValidateWeekend,
   validateBuyInvestment,
 } = require('../utils/companyValidate.utils');
 const { Investment } = require('../models/Investment.model');
 const { User } = require('../models/User.model');
-const { MovementsService } = require('../services/Movements.service');
+const { MovementsService } = require('./createMovement.service');
 const { Movements } = require('../models/investmentMovements.model');
 const getInvestmentService = async (req, investorId) => {
   try {

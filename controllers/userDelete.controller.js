@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const {DeleteUser} = require('../services/userDelete.service');
+const {DeleteUser} = require('../services/deleteUser.service');
 const getDeleteUser = asyncHandler(async(req,res)=>{
     const serviceResult = await DeleteUser(req.params.id,req.body);
     if(serviceResult.error){

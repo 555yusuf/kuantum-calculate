@@ -1,7 +1,7 @@
 const { registerUser } = require('../controllers/registerUser.controller');
 const { Investment } = require('../models/Investment.model');
 const { Movements } = require('../models/investmentMovements.model');
-const { getCurrentPriceService } = require('../services/currentprice.service');
+const { getCurrentPriceService } = require('./GetCurrentPrice.service');
 async function currentprice(symbol) {
   const { weekData } = await getCurrentPriceService(symbol);
   const todayPrice = weekData.at(-1).close;

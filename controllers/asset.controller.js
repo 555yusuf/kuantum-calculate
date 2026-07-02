@@ -3,8 +3,8 @@ const { getDailyTimeSeries } = require('../services/timeMachine.service');
 const { lumpsum } = require('../services/lumpSum.service');
 const { analyzeMarketTiming } = require('../services/marketTiming.service');
 const { calculateDCA } = require('../services/dcaSimulator.service');
-const { getCurrentPriceService } = require('../services/currentprice.service');
-const { getInvestmentService } = require('../services/investmentsMade.service');
+const { getCurrentPriceService } = require('../services/GetCurrentPrice.service');
+const { getInvestmentService } = require('../services/createInvestment.service');
 const { getAllInvest } = require('../services/getInvestments.service');
 
 /**

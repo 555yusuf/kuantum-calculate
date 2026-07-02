@@ -1,4 +1,4 @@
-const {getApiResponsData} = require('../services/apiRespons.service')
+const {getApiResponsData} = require('./apiRespons.service')
 const getCurrentPriceService = async (symbol) => {
   try {
     let today = new Date();
